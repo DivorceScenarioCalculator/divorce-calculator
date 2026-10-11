@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Divorce Settlement Scenario Calculator</title>
+<meta name="description" content="A free, private calculator for exploring divorce settlement scenarios. Everything stays in your browser.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%E2%9A%96%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<style>
+  :root{--bg:#f6f7f9;--card:#fff;--ink:#1a2233;--muted:#5b6476;--line:#e2e6ec;--navy:#1f3864;--accent:#2e5496;--chip:#eef2f8;--total:#102a54;
+    --green:#1b7a43;--blue:#2e5496;--amber:#9a6a00;--red:#b4232a;--grey:#8a93a3;--contest:#9a6a00;--contestbg:#fff4d6;--spouse:#7a3ea0;
+    box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#11151c;--card:#1b212b;--ink:#e7ebf2;--muted:#9aa4b5;--line:#2a323f;--navy:#9db8e6;--accent:#7ea2d8;--chip:#232c38;--total:#cdddf7;--green:#5fd08a;--blue:#7ea2d8;--amber:#e7b84d;--red:#f08a8a;--grey:#8a93a3;--contest:#e7b84d;--contestbg:#3a2e10;--spouse:#c89be6;}}
+  :root[data-theme="dark"]{--bg:#11151c;--card:#1b212b;--ink:#e7ebf2;--muted:#9aa4b5;--line:#2a323f;--navy:#9db8e6;--accent:#7ea2d8;--chip:#232c38;--total:#cdddf7;--green:#5fd08a;--blue:#7ea2d8;--amber:#e7b84d;--red:#f08a8a;--grey:#8a93a3;--contest:#e7b84d;--contestbg:#3a2e10;--spouse:#c89be6;}
+  *{box-sizing:inherit}html,body{margin:0}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.4;font-size:14px}
+  .wrap{max-width:1180px;margin:0 auto;padding:14px 10px 90px}
+  h1{font-size:19px;margin:2px 0;padding-right:40px;color:var(--navy)}.tag{color:var(--muted);font-size:12px;margin:1px 0}
+  .bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:9px 0}
+  .ctrls{margin:6px 0 9px;display:flex;flex-direction:column;gap:8px}
+  .zone{font-size:11px;color:var(--muted);background:var(--chip);border-radius:8px;padding:7px 11px;margin:12px 0 2px}.zone b{color:var(--navy);font-size:12.5px}
+  .subtle{font-size:10.5px;color:var(--muted);margin:3px 0 7px;line-height:1.35}
+  .ctrl-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .ctrl-lbl{font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:800;min-width:82px}
+  .btn{border:1.5px solid var(--accent);color:var(--accent);background:transparent;border-radius:8px;padding:6px 11px;font-size:12px;font-weight:700;cursor:pointer}.btn:hover{background:var(--chip)}.btn.ghost{border-color:var(--line);color:var(--muted)}
+  .seg{display:inline-flex;border:1.5px solid var(--line);border-radius:9px;overflow:hidden}.seg button{border:0;background:transparent;color:var(--muted);padding:6px 13px;font-size:12px;font-weight:700;cursor:pointer}.seg button.on{background:var(--accent);color:#fff}
+  input,select{font-family:inherit;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink);font-size:12.5px;padding:5px 6px}
+  .case{display:flex;flex-wrap:wrap;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-bottom:10px}
+  .case .f{display:flex;flex-direction:column;gap:2px}.case label{font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);font-weight:700}.case input{width:92px}
+  .layout{display:grid;grid-template-columns:1fr;gap:14px}@media(min-width:940px){.layout{grid-template-columns:1fr 310px}}
+  .sections{display:flex;flex-direction:column;gap:10px;min-width:0}
+  .sec{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .sec-h{display:flex;align-items:center;gap:8px;padding:11px 13px;cursor:pointer}.sec-h .arrow{color:var(--muted);font-size:12px;width:12px}.sec-h .nm{font-weight:700;color:var(--navy);flex:1 1 auto;font-size:14.5px}.sec-h .sub{font-weight:800;color:var(--total);font-variant-numeric:tabular-nums}
+  .sec-b{padding:0 13px 11px;border-top:1px solid var(--line)}
+  .item{padding:9px 0;border-bottom:1px dashed var(--line)}.item:last-child{border-bottom:0}
+  .itop{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  .cb{font-size:9px;font-weight:800;text-transform:uppercase;padding:2px 6px;border-radius:10px;background:var(--contestbg);color:var(--contest)}
+  .nm{flex:1 1 130px;min-width:100px;font-weight:600}
+  .dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+  .out{font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .sub-f{display:flex;align-items:center;gap:6px;font-size:12px;margin:4px 0;flex-wrap:wrap}.sub-f label{color:var(--muted);min-width:118px}.sub-f input{width:110px;text-align:right}.sub-f input.txt{text-align:left;width:150px}.sub-f b{color:var(--navy)}
+  .range{display:flex;gap:5px;margin:4px 0;flex-wrap:wrap}
+  .rb{border:1.5px solid var(--line);border-radius:8px;padding:3px 5px 5px;min-width:78px;cursor:pointer;text-align:center}
+  .rb.sel{border-color:var(--accent);background:var(--chip);box-shadow:inset 0 0 0 1px var(--accent)}
+  .rb .rl{font-size:8.5px;text-transform:uppercase;color:var(--muted);letter-spacing:.3px;display:block;font-weight:700;width:100%;border:0;background:var(--chip);border-radius:4px;padding:2px;cursor:pointer}.rb .rl:hover{background:var(--accent);color:#fff}
+  .rb input{width:72px;text-align:right;border:0;background:transparent;padding:2px;font-size:12.5px;font-weight:700;color:var(--ink)}
+  .rb.sel .rl{color:var(--accent)}
+  .presets{display:flex;flex-wrap:wrap;gap:5px;margin:4px 0}
+  .pchip{font-size:11px;border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:14px;padding:3px 9px;cursor:pointer}.pchip:hover{background:var(--chip)}
+  .pedit{display:flex;gap:4px;align-items:center;flex-wrap:wrap;background:var(--chip);padding:6px;border-radius:7px;margin:4px 0}.pedit input{font-size:11px}.pedit .l{width:86px}.pedit .v{width:84px;text-align:right}
+  .mini{font-size:10.5px;border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:6px;padding:3px 7px;cursor:pointer}.mini:hover{border-color:var(--accent);color:var(--accent)}.mini.on{border-color:var(--accent);color:var(--accent);background:var(--chip)}.mini.del:hover{border-color:var(--red);color:var(--red)}
+  .splitwrap{display:inline-flex;align-items:center;gap:3px;font-size:11px;color:var(--muted)}.splitwrap input{width:46px;text-align:right}
+  .note-in input{width:100%;border-style:dashed;color:var(--muted);font-size:11.5px;margin-top:4px}
+  .exnote{font-size:11px;color:var(--muted);background:var(--chip);border-radius:6px;padding:5px 8px;margin-top:4px}.exnote b{color:var(--ink)}
+  .hcalc{background:var(--chip);border-radius:8px;padding:8px 9px;margin:5px 0;font-size:12px}
+  .hcalc .r{display:flex;justify-content:space-between;padding:1px 0}.hcalc .r b{font-variant-numeric:tabular-nums}.hcalc .tot{border-top:1px solid var(--line);margin-top:3px;padding-top:3px;font-weight:700}
+  .collapsed-hint{font-size:11.5px;color:var(--accent);padding:8px 0 2px;cursor:pointer;font-weight:700}
+  .addbtn{font-size:11.5px;color:var(--accent);background:transparent;border:1px dashed var(--accent);border-radius:7px;padding:5px 10px;cursor:pointer;margin-top:8px}
+  .maincol{display:flex;flex-direction:column;gap:10px;min-width:0}.maincol .zone{margin:0}
+  .results{align-self:start;min-width:0}@media(min-width:940px){.results{position:sticky;top:calc(env(safe-area-inset-top, 0px) + 8px)}}
+  .tcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+  .lbl{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+  .amt{font-size:30px;font-weight:800;color:var(--total);margin:2px 0 1px;font-variant-numeric:tabular-nums}
+  .pct{font-size:10.5px;color:var(--muted)}
+  .bk{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;padding:3px 0}.bk .l{color:var(--muted)}.bk .v{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .bk.tot{border-top:1px solid var(--line);margin-top:5px;padding-top:6px;font-weight:800;font-size:13px}.bk.tot .v{color:var(--total)}
+  .flow{border:1px solid var(--line);border-radius:9px;padding:9px;margin-top:9px;background:var(--bg)}
+  .flow h4{margin:0 0 5px;font-size:12px;color:var(--navy)}
+  .flow .src{margin:5px 0}.flow .src .t{display:flex;justify-content:space-between;font-size:11.5px}.flow .src .t .n{color:var(--muted)}.flow .src .t b{font-variant-numeric:tabular-nums}
+  .flow .b{height:8px;border-radius:5px;background:var(--line);overflow:hidden;margin-top:2px}.flow .b div{height:100%}
+  .flow .warn{font-size:11px;color:var(--red);margin-top:6px;font-weight:600}
+  .flow .oknote{font-size:11px;color:var(--green);margin-top:6px}
+  .liq-sub{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);padding:1px 0 1px 18px}.liq-sub span:last-child{font-variant-numeric:tabular-nums}.liq-note{font-size:11px;color:var(--amber);background:var(--contestbg);border-radius:6px;padding:5px 7px;margin-top:5px}
+  .liq{border-top:1px solid var(--line);padding-top:7px;margin-top:9px}.liq-row{display:flex;justify-content:space-between;font-size:11.5px;padding:2px 0}.liq-row .d{display:flex;align-items:center;gap:6px;color:var(--muted)}.liq-row .d i{width:8px;height:8px;border-radius:50%;display:inline-block}.liq-row b{font-variant-numeric:tabular-nums}
+  .advice{font-size:11.5px;color:var(--muted);background:var(--chip);border-radius:8px;padding:8px 10px;margin-top:10px}.advice summary{cursor:pointer;font-weight:700;color:var(--ink)}.advice p{margin:6px 0 0}.advice b{color:var(--ink)}
+  .themebtn{position:fixed;top:calc(env(safe-area-inset-top, 0px) + 6px);right:8px;z-index:9;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:4px 8px;font-size:12px;cursor:pointer}
+  .saved{font-size:11px;color:var(--muted)}
+  .rbv{font-size:12.5px;font-weight:700;color:var(--ink);display:block;padding:2px}
+  .savedrow{display:flex;gap:6px;align-items:center;margin-top:5px}.savedrow input{flex:1 1 auto;font-size:12px;min-width:80px}
+  .roval{font-weight:700;color:var(--navy)}
+  .secnote textarea{width:100%;border:1px dashed var(--accent);border-radius:7px;background:var(--card);color:var(--ink);font-size:12px;padding:6px 8px;margin-top:6px;min-height:34px}
+  .hist{font-size:10.5px;color:var(--muted);padding:1px 0}
+  .cmp{overflow-x:auto;margin-top:4px}.cmp table{border-collapse:collapse;font-size:11.5px}.cmp th,.cmp td{border:1px solid var(--line);padding:5px 8px;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}.cmp th:first-child,.cmp td:first-child{text-align:left;color:var(--muted);position:sticky;left:0;background:var(--card)}.cmp th{background:var(--chip);color:var(--navy)}.cmp tr.tot td{font-weight:800;color:var(--total)}
+  .minidisc{font-size:11.5px;color:var(--muted);border-left:3px solid var(--accent);padding:4px 9px;margin:8px 0}
+  .fbbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin:8px 0;font-size:12px}
+  .fbbar>span:first-child{flex:1 1 260px}
+  .fbbtn{display:inline-block;border:1.5px solid var(--accent);background:var(--accent);color:#fff;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap}.fbbtn:hover{opacity:.9}
+  .savehint{display:block;width:100%;font-size:11px;color:var(--muted);line-height:1.4}
+  .intro{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 12px;margin:8px 0 10px}
+  .intro summary{cursor:pointer;font-weight:700;color:var(--navy);font-size:13px}
+  .introbody{font-size:12.5px;max-width:80ch}.introbody p{margin:9px 0 0}
+  .introbody .warn{background:var(--contestbg);border-radius:7px;padding:7px 9px;color:var(--ink)}
+  button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<button class="themebtn" data-click="theme">◐</button>
+<div class="wrap">
+  <h1>Divorce Scenario Calculator</h1>
+  <p class="tag">A flexible, two-sided model for exploring divorce settlement scenarios in any U.S. state. Fill in your own numbers - every field is editable. Not legal or tax advice.</p>
+  <div class="minidisc">Planning &amp; education tool only - not legal or tax advice. Verify everything with your attorney. Your entries stay in this browser; nothing is uploaded.</div>
+  <div class="fbbar"><span><b>This tool is in testing.</b> Your feedback would be hugely appreciated - what is broken, confusing, or missing? Did we miss something, or could something work better? Please tell me.</span><span class="savehint" style="width:100%;margin-top:2px">Opens a short Google Form in a new tab - only what you type there is sent; your financial entries never leave your browser.</span><a class="fbbtn" id="fblink" href="https://forms.gle/ZGRjXZDoP8otymmD7" target="_blank" rel="noopener">Send feedback</a></div>
+  <details class="intro" open>
+    <summary>About this tool - please read first (what it is, how it works, and important disclaimers)</summary>
+    <div class="introbody">
+      <p><b>What it is.</b> A free, private tool to explore divorce settlement scenarios. It helps you see, in rough numbers, what each spouse might walk away with under different assumptions, and how trade-offs play out - keeping the home, taking more cash now versus retirement, or securing a lump sum up front. Think of it as a way to make sense of the equitable-distribution schedules and support figures your professionals prepare, and to work through your own goals before meetings.</p>
+      <p><b>How it works, and how the pieces connect.</b> You enter your own assets, debts, the home, a business, and alimony inputs - every field is editable.<br>
+      &bull; Marital assets are split between you (50/50 by default; change the "% you" on any item).<br>
+      &bull; The <b>Your totals / Spouse's totals</b> tabs show what each of you ends up with; <b>Division</b> counts only what gets split, <b>Total wealth</b> also adds each side's separate property.<br>
+      &bull; The <b>Home</b> section computes equity, then either the buyout you would pay to keep it, or the tax and selling costs if you sell.<br>
+      &bull; <b>Alimony</b> uses a formula (for example, Florida: the lesser of your need or 35% of the net-income difference, paid over a set duration) - edit the %, income figures, and duration for your own state.<br>
+      &bull; <b>Low / Likely / High</b> let you test ranges on contested items; the <b>Deal Builder</b> suggests the best mix of assets to actually take for a goal (cash now, security, or deferring tax).<br>
+      &bull; <b>Save current</b> names a scenario so you can compare different versions side by side.</p>
+      <p><b>What "saving" means.</b> Everything you type - including saved scenarios - stays in your own browser on your device. Nothing is uploaded, sent, or stored on any server. "Save current" keeps a named version in that browser; "Download backup" saves a file you control and can re-import on any device; "Clear / reset," or clearing your browser data, erases everything. <b>Best practice: download a backup after any important changes</b> so you always have a copy you trust.</p>
+      <p class="warn"><b>Please work with a professional - this does not replace one.</b> This is an educational planning tool, <b>not legal, tax, or financial advice</b>, and not a substitute for an attorney, a forensic or financial professional, or an official state calculation. Divorce laws, alimony types and caps, child-support guidelines, imputed income, and tax treatment vary a great deal by state and change over time; the examples built in (like the 35% alimony figure or the Florida durational caps) reflect one state's rules and may not apply to yours. The results are estimates based only on what you enter and on simplifying assumptions - they can be incomplete, out of date, or wrong, and the tool may contain errors. <b>Verify every figure with your own attorney and financial professionals. Use this only to understand scenarios and prepare better questions - never to make firm decisions, negotiate, or file anything.</b></p>
+      <p class="warn"><b>No guarantee and no liability.</b> This tool is provided "as is." The creator makes no guarantee of accuracy, completeness, or fitness for any purpose, and accepts no liability for any decisions, losses, or outcomes arising from its use. By using it you accept full responsibility for checking all numbers with qualified professionals before relying on anything here.</p>
+    </div>
+  </details>
+  <div class="case" id="case"></div>
+  <div class="zone"><b>1 · Assumptions</b> - what you think will happen: set contested items Low / Likely / High, jump to a one-click preset, or save &amp; compare named scenarios (counter-offers too).</div>
+  <div class="ctrls">
+    <div class="ctrl-row"><span class="ctrl-lbl">Assumption</span><div class="seg" id="seg"><button data-click="scen" data-s="low">Low</button><button data-click="scen" data-s="lk">Likely</button><button data-click="scen" data-s="hi">High</button></div><span class="saved" id="saved" style="margin-left:auto"></span></div>
+    <div class="ctrl-row"><span class="ctrl-lbl">Quick preset</span><div class="seg" id="presetseg"><button data-click="preset" data-v="target">Your target</button><button data-click="preset" data-v="likely">Likely</button><button data-click="preset" data-v="floor">Their case (floor)</button></div></div>
+    <div class="ctrl-row"><span class="ctrl-lbl">Saved</span><button class="btn ghost" data-click="savescen">+ Save current</button><span id="savedchips"></span><button class="btn ghost" data-click="togglecompare">Compare</button><button class="btn ghost" data-click="togglehist" title="recent changes">History</button></div>
+    <div class="ctrl-row"><span class="ctrl-lbl">File</span><button class="btn ghost" data-click="export">⬇ Download backup</button><button class="btn ghost" data-click="impclick">⬆ Load backup</button><input id="imp" type="file" accept="application/json" style="display:none" data-change="import"><button class="btn ghost" data-click="reset">↺ Clear / reset</button><div class="savehint">Your work auto-saves in <b>this</b> browser and stays until you clear it. To keep a permanent copy or use it on another device, click <b>Download backup</b> and keep the file safe (or email it to yourself / your attorney); <b>Load backup</b> brings it back.</div></div>
+  </div>
+  <div class="layout">
+    <div class="maincol">
+      <div id="scenbar"></div>
+      <div class="zone"><b>2 · Your figures</b> - the assets and claims behind the totals. Tap a section to open it and edit any number.</div>
+      <div class="sections" id="sections"></div>
+    </div>
+    <div class="results">
+      <div class="tcard">
+        <div class="zone" style="margin-top:0"><b>3 · Results &amp; strategy</b> - what each side walks away with, and the best way to structure your share.</div>
+        <div class="seg" id="tabseg" style="margin-bottom:4px"><button data-click="tab" data-t="you">Your totals</button><button data-click="tab" data-t="spouse" id="tabSpBtn">Spouse's totals</button><button data-click="tab" data-t="deal">Deal Builder</button></div>
+        <div class="subtle">Your totals / Spouse's totals = what each of you ends up with. Deal Builder = the best mix of assets to take for your goal (cash now, security, or tax).</div>
+        <div class="seg" id="modeseg" style="margin-bottom:9px;font-size:11px"><button data-click="mode" data-m="division">Division only</button><button data-click="mode" data-m="wealth">Total wealth</button></div>
+        <div class="subtle">Division only = just what gets split. Total wealth = also counts each side's separate (inherited) property.</div>
+        <div class="lbl" id="mainLbl">You get</div>
+        <div class="amt" id="mainAmt">$0</div>
+        <div class="pct" id="mainPct"></div>
+        <div id="modeNote" class="pct" style="margin:2px 0 8px"></div>
+        <div id="bk"></div>
+        <div id="flow"></div>
+        <div class="liq" id="liq"></div>
+      </div>
+      <details class="advice"><summary>ⓘ How funds differ (for settlement)</summary><p><b>Cash / taxable:</b> available soon; taxed only on gains.<br><b>QDRO (401k):</b> penalty-free early access in divorce, taxed as income when drawn.<br><b>IRA:</b> moves tax-free, but withdrawal before 59½ usually adds 10%.<br><b>Illiquid / offset:</b> not cash - received through other assets.<br><b>Real estate:</b> tied up until sale/refinance.</p></details>
+    </div>
+  </div>
+</div>
+<script>
+const SECTIONS=[['accounts','Accounts & Retirement'],['house','House / Real Estate'],['business','Business'],['alimony','Alimony'],['addbacks','Add-backs, Fees & Reimbursements'],['debt','Debts'],['nonmarital','Non-marital (reference)'],['children','Child Support (monthly)'],['other','Other']];
+const ACCS=[['cash','Cash now','var(--green)'],['taxable','Taxable (sell)','var(--green)'],['qdro','QDRO penalty-free','var(--blue)'],['ira','IRA (penalty if early)','var(--amber)'],['realestate','Real estate','var(--amber)'],['illiquid','Illiquid / offset','var(--red)'],['hardcollect','Hard to collect','var(--red)'],['debt','Debt','var(--grey)'],['na','N/A','var(--grey)']];
+const TYPES=[['asset','Marital asset (split)'],['inflow','Transfer to you'],['debtYou','Your debt'],['debtSpouse','Spouse debt'],['sepYou','Your separate'],['sepSpouse','Spouse separate']];
+const LIQ={cash:'liquid',taxable:'liquid',qdro:'qdro',ira:'tied',illiquid:'tied',realestate:'tied',hardcollect:'tied',debt:'x',na:'liquid'};
+const SK={low:'Low',lk:'Lk',hi:'Hi'};
+const rid=()=>'r'+(Math.random()*1e9|0);
+function A(cat,name,acc,total,ex,o){ o=o||{}; return {id:rid(),cat,name,acc,type:'asset',total,share:o.share==null?50:o.share,inc:o.inc!==false,contested:false,noSum:!!o.ns,ex,note:''}; }
+function CA(cat,name,acc,total,low,lk,hi,ex,o){ o=o||{}; const r={id:rid(),cat,name,acc,type:'asset',total,low,lk,hi,share:o.share==null?50:o.share,inc:o.inc!==false,contested:true,noSum:!!o.ns,ex,note:'',pick:null}; if(o.presets)r.presets=o.presets; return r; }
+function FL(cat,name,acc,type,low,lk,hi,ex,o){ o=o||{}; const r={id:rid(),cat,name,acc,type,low:low||'',lk,hi:hi||'',inc:o.inc!==false,contested:!!o.c,noSum:!!o.ns,ex,note:'',pick:null}; if(o.presets)r.presets=o.presets; return r; }
+function houseRow(){ return {id:rid(),cat:'house',name:'Home / real estate',acc:'realestate',type:'house',inc:true,contested:true,share:50,pick:null,decision:'keep',
+  aprLow:0,aprLk:0,aprHi:0,mortgage:0,adj:[],sellPct:6,sellFixed:0,taxLow:0,taxLk:0,taxHi:0,note:'',
+  ex:'',
+  presets:[]}; }
+function D(){ return { scen:'lk', mode:'division', tab:'you', dealPriority:'secure', exp:{}, scenarios:[], secNotes:{}, editSec:{}, compareMode:false, histOpen:false,
+ case:[['Your name',''],['Spouse name',''],['State',''],['Date of marriage',''],['Date of separation / filing',''],['Minor children','0']],
+ rows:[
+  A('accounts','Bank / checking / savings','cash',0,''),
+  A('accounts','Brokerage / taxable account','taxable',0,''),
+  A('accounts','401(k) or pension (via QDRO)','qdro',0,''),
+  A('accounts','IRA','ira',0,''),
+  {id:rid(),cat:'house',name:'Home / real estate',acc:'realestate',type:'house',inc:true,contested:true,share:50,pick:null,decision:'keep',aprLow:'',aprLk:0,aprHi:'',mortgage:0,adj:[],sellPct:6,sellFixed:0,taxLow:'',taxLk:0,taxHi:'',note:'',ex:'',presets:[]},
+  A('business','Business interest','illiquid',0,''),
+  {id:rid(),cat:'alimony',name:'Alimony / spousal support',acc:'cash',type:'alimony',inc:true,contested:true,pick:null,structure:'lump',amode:'formula',ratePct:35,spNetLow:'',spNetLk:0,spNetHi:'',youNet:0,need:0,durYrs:0,discPct:5,hybridLumpPct:50,low:'',lk:0,hi:'',ex:'',note:'',presets:[]},
+  FL('addbacks','Legal / expert fee contribution','cash','inflow',0,0,0,'',{}),
+  FL('addbacks','Reimbursement / add-back','cash','inflow',0,0,0,'',{}),
+  FL('debt','Credit cards / loans (yours)','debt','debtYou',0,0,0,'',{}),
+  FL('nonmarital','Separate property (spouse keeps)','na','sepSpouse',0,0,0,'Inheritance, pre-marriage or gifted assets that stay with the owner; counts only in Total wealth mode.',{inc:false}),
+  {id:rid(),cat:'children',name:'Child support',type:'childsupport',acc:'cash',inc:true,contested:false,noSum:false,kids:0,custodyPct:50,monthly:0,childcare:0,direction:'receive',note:'',ex:''}
+ ]};}
+
+const LS='divorce_calc_public_v1'; let C,st; const pEdit=new Set(); const liqExp=new Set();
+function fixRows(rows){ (rows||[]).forEach(r=>{ if(r&&r.type==='alimony'){ Object.keys(r).forEach(k=>{ const m=/^([a-z]+)Net(Low|Lk|Hi)$/.exec(k); if(m&&m[1]!=='sp'){ if(r['spNet'+m[2]]==null) r['spNet'+m[2]]=r[k]; delete r[k]; } }); } }); }
+function migrate(){ fixRows(C.rows); (C.scenarios||[]).forEach(x=>{ if(x&&x.cfg) fixRows(x.cfg.rows); }); if(Array.isArray(C._undo)) C._undo.forEach(e=>{ if(e&&typeof e.snap==='string'&&!/spNet/.test(e.snap)){ try{ const o=JSON.parse(e.snap); fixRows(o.rows); e.snap=JSON.stringify(o); }catch(x){} } }); if(!C.exp)C.exp={}; if(!C.mode)C.mode='division'; if(!C.tab)C.tab='you'; if(!C.dealPriority)C.dealPriority='secure'; if(!Array.isArray(C.scenarios))C.scenarios=[]; if(!C.secNotes)C.secNotes={}; if(!C.editSec)C.editSec={}; if(C.compareMode==null)C.compareMode=false; if(C.histOpen==null)C.histOpen=false; if(Array.isArray(C.scenarios))C.scenarios.forEach((x,i)=>{ if(!x||typeof x!=='object'){C.scenarios[i]={name:'Scenario '+(i+1),cfg:{}};} else if(!x.name||typeof x.name!=='string'||!x.name.trim()) x.name='Scenario '+(i+1); }); const _a=C.rows&&C.rows.find(r=>r.type==='alimony'); if(_a&&_a.ratePct==null)_a.ratePct=35; if(C.rows&&!C.rows.some(r=>r.type==='childsupport'))C.rows.push({id:rid(),cat:'children',name:'Child support',type:'childsupport',acc:'cash',inc:true,contested:false,noSum:false,kids:0,custodyPct:50,monthly:0,childcare:0,direction:'receive',note:'',ex:''}); const hr=C.rows&&C.rows.find(r=>r.type==='house'); if(hr&&!hr.decision)hr.decision='keep'; }
+function loadLS(){ try{ const raw=localStorage.getItem(LS); if(raw){ C=JSON.parse(raw); migrate(); return; } }catch(e){} C=D(); migrate(); }
+function saveLS(){ try{ localStorage.setItem(LS,JSON.stringify(C)); }catch(e){} }
+function persist(){ flash(); saveLS(); }
+function flash(){ const el=document.getElementById('saved'); if(el){ el.textContent='✓ saved'; clearTimeout(st); st=setTimeout(()=>el.textContent='',1000);} }
+function fmt(n){ const s=n<0?'-':''; return s+'$'+Math.abs(Math.round(n||0)).toLocaleString('en-US'); }
+function esc(s){ return (s==null?'':s).toString().replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function accColor(a){ const x=ACCS.find(z=>z[0]===a); return x?x[2]:'var(--grey)'; }
+function R(id){ return C.rows.find(x=>x.id===id); }
+function ro(){ return ''; }
+function col(r){ return (r.pick==='low'||r.pick==='lk'||r.pick==='hi')?r.pick:C.scen; }
+const WK=['rows','scen','mode','tab','dealPriority','case','exp','editSec','secNotes'];
+function workSnap(){ const o={}; WK.forEach(k=>o[k]=C[k]); return JSON.stringify(o); }
+function pushHistory(label){ C._undo=C._undo||[]; C._undo.push({label,snap:workSnap()}); if(C._undo.length>40)C._undo.shift(); }
+function undo(){ if(!C._undo||!C._undo.length)return; const e=C._undo.pop(); const o=JSON.parse(e.snap); WK.forEach(k=>{ if(k in o) C[k]=o[k]; }); migrate(); persist(); render(); }
+function smartName(){ let nm='Scenario '+(C.scenarios.length+1)+' ('+scenName()+')'; let cand=nm,i=1; while(C.scenarios.some(x=>x.name===cand)){ i++; cand=nm+' #'+i; } return cand; }
+function saveScenario(){ C.scenarios.push({name:smartName(), cfg:JSON.parse(workSnap())}); C.compareMode=true; persist(); render(); }
+function loadScenario(i){ const sc=C.scenarios[i]; if(!sc)return; pushHistory('load scenario: '+sc.name); WK.forEach(k=>{ if(k in sc.cfg) C[k]=JSON.parse(JSON.stringify(sc.cfg[k])); }); migrate(); persist(); render(); }
+function delScenario(i){ C.scenarios.splice(i,1); persist(); render(); }
+function renameScenario(i,nm){ if(C.scenarios[i]) C.scenarios[i].name=nm; persist(); render(); }
+function currentCfg(){ const o={}; WK.forEach(k=>o[k]=C[k]); return o; }
+function scenarioBreakdown(cfg){ const bak={}; WK.forEach(k=>bak[k]=C[k]); WK.forEach(k=>{ if(k in cfg) C[k]=cfg[k]; });
+  let you=0,sp=0; const b={accounts:0,house:0,business:0,alimony:0,addbacks:0,debt:0};
+  (C.rows||[]).forEach(r=>{ if(!r.inc||r.noSum)return; if(C.mode==='division'&&isSep(r))return; if(r.cat==='children')return;
+    const y=youShare(r); you+=y; sp+=spShare(r);
+    if(r.type==='house')b.house+=y; else if(r.type==='alimony')b.alimony+=y; else if(r.type==='inflow')b.addbacks+=y;
+    else if(r.type==='asset'){ if(r.cat==='accounts')b.accounts+=y; else if(r.cat==='business')b.business+=y; else b.accounts+=y; }
+    else if(r.type==='debtYou')b.debt+=y; });
+  WK.forEach(k=>C[k]=bak[k]); b.you=you; b.sp=sp; return b; }
+function nameField(r){ return `<input class="nm" type="text" value="${esc(r.name)}" data-change="upd" data-id="${esc(r.id)}" data-f="name" style="font-weight:600;min-width:110px">`; }
+function ni(r,fld,val,style){ return `<input type="number" value="${esc(val)}" data-change="upd" data-id="${esc(r.id)}" data-f="${esc(fld)}" style="${esc(style||'')}">`; }
+function houseEquity(r){ const apr=houseApr(r); const a=(r.adj||[]).reduce((s,x)=>s+(+x.amt||0),0); return apr-(+r.mortgage||0)+a; }
+function houseApr(r){ let v=r['apr'+SK[col(r)]]; if(v===''||v==null)v=r.aprLk; return +v||0; }
+function houseSellCosts(r){ return houseApr(r)*(+r.sellPct||0)/100 + (+r.sellFixed||0); }
+function houseTax(r){ let v=r['tax'+SK[col(r)]]; if(v===''||v==null)v=r.taxLk; return +v||0; }
+function houseNet(r){ return houseEquity(r)-houseSellCosts(r)-houseTax(r); }
+function houseBase(r){ return r.decision==='sell'?houseNet(r):houseEquity(r); }
+function houseBuyout(r){ return r.decision==='sell'?0:houseEquity(r)*(100-(+r.share||0))/100; }
+function assetVal(r){ if(r.contested){ let v=r[col(r)]; if(v===''||v==null)v=r.lk; if(v===''||v==null)v=r.total; return +v||0; } return +r.total||0; }
+function flowVal(r){ let v=r[col(r)]; if(v===''||v==null)v=r.lk; return +v||0; }
+function alimSpNet(r){ let v=r['spNet'+SK[col(r)]]; if(v===''||v==null)v=r.spNetLk; return +v||0; }
+function alimRate(r){ return (r.ratePct===''||r.ratePct==null||isNaN(+r.ratePct))?35:+r.ratePct; }
+function alimMonthly(r){ return Math.max(0, Math.min(+r.need||0, (alimRate(r)/100)*(alimSpNet(r)-(+r.youNet||0)))); }
+function alimMonths(r){ return Math.round((+r.durYrs||0)*12); }
+function alimLumpFull(r){ if(r.amode==='manual'){ let v=r[col(r)]; if(v===''||v==null)v=r.lk; return +v||0; } const m=alimMonthly(r), n=alimMonths(r), d=(+r.discPct||0)/100/12; if(d>0) return m*(1-Math.pow(1+d,-n))/d; return m*n; }
+function alimContribution(r){ if(r.structure==='periodic') return 0; if(r.structure==='hybrid') return alimLumpFull(r)*(+r.hybridLumpPct||0)/100; return alimLumpFull(r); }
+function alimMonthlyOblig(r){ if(r.structure==='periodic') return alimMonthly(r); if(r.structure==='hybrid'){ const rem=alimLumpFull(r)*(100-(+r.hybridLumpPct||0))/100; const n=alimMonths(r); return n>0?rem/n:0; } return 0; }
+function youShare(r){ switch(r.type){ case 'childsupport':return ((r.direction||'receive')==='receive'?1:-1)*((+r.monthly||0)+(+r.childcare||0)); case 'alimony':return alimContribution(r); case 'house':return houseBase(r)*(+r.share||0)/100; case 'asset':return assetVal(r)*(+r.share||0)/100; case 'inflow':return flowVal(r); case 'debtYou':return -Math.abs(flowVal(r)); case 'sepYou':return flowVal(r); default:return 0; } }
+function spShare(r){ switch(r.type){ case 'alimony':return -alimContribution(r); case 'house':return houseBase(r)*(100-(+r.share||0))/100; case 'asset':return assetVal(r)*(100-(+r.share||0))/100; case 'inflow':return -flowVal(r); case 'debtSpouse':return -Math.abs(flowVal(r)); case 'sepSpouse':return flowVal(r); default:return 0; } }
+function isSep(r){ return r.type==='sepYou'||r.type==='sepSpouse'; }
+function counts(r){ return r.inc && !r.noSum && !(C.mode==='division'&&isSep(r)); }
+function shareFor(r){ return C.tab==='spouse'?spShare(r):youShare(r); }
+function spouseName(){ const f=C.case.find(x=>x[0]==='Spouse name'); return (f&&f[1])||'Spouse'; }
+function stateName(){ const f=C.case.find(x=>x[0]==='State'); return (f&&f[1])||''; }
+function caseVal(lbl){ const f=C.case.find(x=>x[0]===lbl); return f?f[1]:''; }
+function marriageYears(){ const dm=caseVal('Date of marriage'), ds=caseVal('Date of separation / filing'); if(dm&&ds){ const a=new Date(dm),b=new Date(ds); if(!isNaN(a)&&!isNaN(b)&&b>a) return (b-a)/(365.25*24*3600*1000); } return null; }
+function researchLink(topic){ return 'https://www.google.com/search?q='+encodeURIComponent((stateName()?stateName()+' ':'')+topic); }
+function scenName(){ return {low:'Low',lk:'Likely',hi:'High'}[C.scen]; }
+
+function render(){
+  const cw=document.getElementById('case'); cw.innerHTML='';
+  C.case.forEach((f,i)=>{ const d=document.createElement('div'); d.className='f'; const dt=/date/i.test(f[0]); d.innerHTML=`<label>${esc(f[0])}</label><input type="${esc(dt?'date':'text')}" value="${esc(f[1])}" data-change="case" data-i="${esc(i)}">`; cw.appendChild(d); });
+  const my=marriageYears(); if(my){ const d=document.createElement('div'); d.className='f'; d.innerHTML=`<label>Marriage length (calculated)</label><input type="text" value="${my.toFixed(1)} yrs" disabled style="font-weight:700;color:var(--navy)">`; cw.appendChild(d); }
+  document.querySelectorAll('#seg button').forEach(b=>b.classList.toggle('on',b.dataset.s===C.scen));
+  document.querySelectorAll('#modeseg button').forEach(b=>b.classList.toggle('on',b.dataset.m===C.mode));
+  document.querySelectorAll('#tabseg button').forEach(b=>b.classList.toggle('on',b.dataset.t===C.tab));
+  const tb=document.getElementById('tabSpBtn'); if(tb)tb.textContent=spouseName()+"'s totals";
+  const sc=document.getElementById('sections'); sc.innerHTML='';
+  SECTIONS.forEach(([key,name])=>{
+    const rows=C.rows.filter(r=>r.cat===key); if(rows.length===0&&key!=='children'&&key!=='other') return;
+    const sub=rows.filter(r=>counts(r)).reduce((a,r)=>a+shareFor(r),0);
+    const open=!!C.exp[key]; const sec=document.createElement('div'); sec.className='sec';
+    let h=`<div class="sec-h" data-click="toggle" data-k="${esc(key)}"><span class="arrow">${open?'▾':'▸'}</span><span class="nm">${name}</span>`;
+    if(key!=='children') h+=`<span class="sub">${fmt(sub)}</span>`;
+    h+=`</div><div class="sec-b">`;
+    if(!open){ const cont=rows.filter(r=>r.contested); if(cont.length) cont.forEach(r=> h+=itemHtml(r,true)); else h+=`<div class="tag" style="padding:8px 0">No contested items. Expand to edit all.</div>`;
+      h+=`<div class="collapsed-hint" data-click="toggle" data-k="${esc(key)}">Expand to see &amp; edit all ${rows.length} field${rows.length!==1?'s':''} ▾</div>`;
+    } else { rows.forEach(r=> h+=itemHtml(r,false));
+      h+=`<div class="secnote"><div class="lbl" style="margin-top:8px">Your notes for this section (reasoning / arguments)</div><textarea data-change="secnote" data-k="${esc(key)}" placeholder="e.g. why you chose this amount, %, or structure for this section">${esc(C.secNotes[key]||'')}</textarea></div>`;
+      h+=`<button class="addbtn" data-click="add" data-k="${esc(key)}">+ add field</button>`;
+      h+=`<div class="collapsed-hint" data-click="toggle" data-k="${esc(key)}" style="text-align:center;border-top:1px solid var(--line);margin-top:8px;padding-top:8px">\u25b4 Collapse this section</div>`; }
+    h+=`</div>`; sec.innerHTML=h; sc.appendChild(sec);
+  });
+  renderSaved();
+  compute();
+}
+function rangeBoxes(r,kl,kk,kh){ const c=col(r);
+  const box=(scen,lbl,key)=>`<div class="rb ${c===scen?'sel':''}"><button class="rl" data-click="pick" data-id="${esc(r.id)}" data-c="${esc(scen)}" title="use this one">${lbl}${r.pick===scen?' ★':''}</button><input type="number" value="${esc(r[key])}" placeholder="${scen==='lk'?'':esc(r[kk]===''||r[kk]==null?0:r[kk])}" title="${scen==='lk'?'':'Leave blank to use the Likely value'}" data-change="upd" data-id="${esc(r.id)}" data-f="${esc(key)}"></div>`;
+  return `<div class="range">${box('low','Low',kl)}${box('lk','Likely',kk)}${box('hi','High',kh)}</div>`; }
+function presetHtml(r){ if(!r.presets||!r.presets.length) return '';
+  if(pEdit.has(r.id)){ let h='<div class="pedit">'; r.presets.forEach((p,i)=>{ h+=`<input class="l" type="text" value="${esc(p.label)}" data-change="pset" data-id="${esc(r.id)}" data-i="${esc(i)}" data-f="label"><input class="v" type="number" value="${esc(p.value)}" data-change="pset" data-id="${esc(r.id)}" data-i="${esc(i)}" data-f="value"><button class="mini del" data-click="pdel" data-id="${esc(r.id)}" data-i="${esc(i)}">✕</button>`; }); h+=`<button class="mini" data-click="padd" data-id="${esc(r.id)}">+ preset</button><button class="mini on" data-click="pdone" data-id="${esc(r.id)}">done</button></div>`; return h; }
+  let h='<div class="presets">'; r.presets.forEach(p=>{ h+=`<button class="pchip" data-click="papply" data-id="${esc(r.id)}" data-v="${esc(p.value)}">${esc(p.label)}: ${fmt(p.value)}</button>`; }); h+=`<button class="mini" data-click="pedit" data-id="${esc(r.id)}">✎</button></div>`; return h;
+}
+function houseHtml(r,collapsed){
+  const eq=houseEquity(r), keep=(r.decision!=='sell');
+  let h=`<div class="item"><div class="itop"><span class="cb">Contested</span><span class="dot" style="background:${accColor(r.acc)}"></span>${nameField(r)}<span class="out">${fmt(youShare(r))}</span></div>`;
+  h+=`<div class="seg" style="margin:5px 0;font-size:11px"><button data-click="hdec" data-id="${esc(r.id)}" data-d="keep" class="${esc(keep?'on':'')}">Keep &amp; buy out</button><button data-click="hdec" data-id="${esc(r.id)}" data-d="sell" class="${esc(!keep?'on':'')}">Sell jointly</button></div>`;
+  h+=`<div class="sub-f"><label>Appraisal</label></div>`+rangeBoxes(r,'aprLow','aprLk','aprHi')+presetHtml(r);
+  if(!collapsed){
+    h+=`<div class="sub-f"><label>Mortgage / owed</label><input type="number" value="${esc(r.mortgage)}" data-change="upd" data-id="${esc(r.id)}" data-f="mortgage"></div>`;
+    (r.adj||[]).forEach((x,i)=>{ h+=`<div class="sub-f"><input class="txt" type="text" value="${esc(x.label)}" data-change="adjset" data-id="${esc(r.id)}" data-i="${esc(i)}" data-f="label"><input type="number" value="${esc(x.amt)}" data-change="adjset" data-id="${esc(r.id)}" data-i="${esc(i)}" data-f="amt"><button class="mini del" data-click="adjdel" data-id="${esc(r.id)}" data-i="${esc(i)}">✕</button></div>`; });
+    h+=`<button class="mini" data-click="adjadd" data-id="${esc(r.id)}">+ adjustment</button>`;
+    h+=`<div class="sub-f"><label>Your entitlement %</label><input type="number" value="${esc(r.share)}" data-change="upd" data-id="${esc(r.id)}" data-f="share" style="width:60px"></div>`;
+  }
+  h+=`<div class="hcalc">`;
+  h+=`<div class="r"><span>Equity (appraisal ${fmt(houseApr(r))} − owed ${fmt(+r.mortgage||0)})</span><b>${fmt(eq)}</b></div>`;
+  if(keep){
+    h+=`<div class="r"><span>Buyout to ${esc(spouseName())} (their ${100-(+r.share||0)}% of equity)</span><b>${fmt(houseBuyout(r))}</b></div>`;
+    h+=`<div class="r tot"><span>You hold the home; your net share</span><b>${fmt(youShare(r))}</b></div>`;
+    if(!collapsed) h+=`<div style="font-size:11px;color:var(--muted);margin-top:4px">No tax now. If you sell later, capital-gains/recapture applies (set it under "Sell" to see the size). The buyout is funded in the sidebar: alimony first, then accounts.</div>`;
+  } else {
+    if(!collapsed){
+      h+=`<div class="r"><span>Selling costs, % of sale price (<input type="number" value="${esc(r.sellPct)}" data-change="upd" data-id="${esc(r.id)}" data-f="sellPct" style="width:42px;text-align:right">% + <input type="number" value="${esc(r.sellFixed)}" data-change="upd" data-id="${esc(r.id)}" data-f="sellFixed" style="width:70px;text-align:right">)</span><b>-${fmt(houseSellCosts(r))}</b></div>`;
+      h+=`<div class="r"><span>Capital-gains / recapture tax</span></div>`+rangeBoxes(r,'taxLow','taxLk','taxHi');
+    } else {
+      h+=`<div class="r"><span>− selling costs</span><b>-${fmt(houseSellCosts(r))}</b></div><div class="r"><span>− tax</span><b>-${fmt(houseTax(r))}</b></div>`;
+    }
+    h+=`<div class="r"><span>Net proceeds</span><b>${fmt(houseNet(r))}</b></div>`;
+    h+=`<div class="r tot"><span>Your ${+r.share||0}% of proceeds</span><b>${fmt(youShare(r))}</b></div>`;
+  }
+  h+=`</div>`;
+  if(!collapsed){ if(r.ex) h+=`<div class="exnote"><b>Note:</b> ${esc(r.ex)}</div>`; h+=`<div class="note-in"><input type="text" placeholder="your note" value="${esc(r.note)}" data-change="upd" data-id="${esc(r.id)}" data-f="note"></div>`; }
+  h+=`</div>`; return h;
+}
+function alimHtml(r,collapsed){
+  const struct=r.structure||'lump', mode=r.amode||'formula';
+  const monthly=alimMonthly(r), months=alimMonths(r), lumpFull=alimLumpFull(r), contrib=alimContribution(r), oblig=alimMonthlyOblig(r);
+  let h=`<div class="item"><div class="itop"><span class="cb">Contested</span><span class="dot" style="background:${accColor(r.acc)}"></span>${nameField(r)}<span class="out">${fmt(youShare(r))}</span></div>`;
+  h+=`<div class="seg" style="margin:5px 0;font-size:11px"><button data-click="astruct" data-id="${esc(r.id)}" data-v="lump" class="${esc(struct==='lump'?'on':'')}">Lump sum</button><button data-click="astruct" data-id="${esc(r.id)}" data-v="hybrid" class="${esc(struct==='hybrid'?'on':'')}">Hybrid</button><button data-click="astruct" data-id="${esc(r.id)}" data-v="periodic" class="${esc(struct==='periodic'?'on':'')}">Periodic</button></div>`;
+  if(!collapsed) h+=`<div class="seg" style="margin:4px 0;font-size:10.5px"><button data-click="amode" data-id="${esc(r.id)}" data-v="formula" class="${esc(mode==='formula'?'on':'')}">Compute from income</button><button data-click="amode" data-id="${esc(r.id)}" data-v="manual" class="${esc(mode==='manual'?'on':'')}">Enter lump directly</button></div>`;
+  if(mode==='formula'){
+    if(!collapsed){
+      h+=`<div class="sub-f"><label>${esc(spouseName())} net $/mo (contested)</label></div>`+rangeBoxes(r,'spNetLow','spNetLk','spNetHi');
+      h+=`<div class="sub-f"><label>Your net $/mo (incl. imputed)</label><input type="number" value="${esc(r.youNet)}" data-change="upd" data-id="${esc(r.id)}" data-f="youNet"></div>`;
+      h+=`<div class="sub-f"><label>Your need $/mo</label><input type="number" value="${esc(r.need)}" data-change="upd" data-id="${esc(r.id)}" data-f="need"></div>`;
+      h+=`<div class="sub-f"><label>% of income difference</label><input type="number" value="${esc(r.ratePct)}" data-change="upd" data-id="${esc(r.id)}" data-f="ratePct" style="width:56px"> <span style="font-size:10px;color:var(--muted)">(FL = 35; edit for your state)</span></div>`;
+      h+=`<div class="sub-f"><label>Duration (years)</label><input type="number" value="${esc(r.durYrs)}" data-change="upd" data-id="${esc(r.id)}" data-f="durYrs" style="width:56px"> <label style="min-width:56px">Discount %</label><input type="number" value="${esc(r.discPct)}" data-change="upd" data-id="${esc(r.id)}" data-f="discPct" style="width:52px"></div>`;
+    }
+    h+=`<div class="hcalc"><div class="r"><span>${alimRate(r)}% x (${fmt(alimSpNet(r))} - ${fmt(+r.youNet||0)}), capped at need ${fmt(+r.need||0)}</span></div><div class="r"><span>Monthly award</span><b>${fmt(monthly)}/mo</b></div><div class="r"><span>Lump-sum value (${months} mo @ ${esc(r.discPct)}% PV)</span><b>${fmt(lumpFull)}</b></div>`;
+    { const my=marriageYears(); if(my){ const capPct=my<10?50:(my<20?60:75); h+=`<div class="r" style="color:var(--muted)"><span>Marriage length ${my.toFixed(1)} yrs. Example (Florida) durational cap: ${capPct}% = ${(my*capPct/100).toFixed(1)} yrs. Set Duration above for your state.</span></div>`; } }
+    h+=`</div>`;
+  } else {
+    h+=`<div class="sub-f"><label>Lump sum (Low/Likely/High)</label></div>`+rangeBoxes(r,'low','lk','hi')+presetHtml(r);
+  }
+  if(struct==='hybrid' && !collapsed) h+=`<div class="sub-f"><label>% taken as lump up front</label><input type="number" value="${esc(r.hybridLumpPct)}" data-change="upd" data-id="${esc(r.id)}" data-f="hybridLumpPct" style="width:56px"></div>`;
+  h+=`<div class="hcalc" style="background:var(--chip)"><div class="r tot"><span>Counts in the division now</span><b>${fmt(contrib)}</b></div>`;
+  if(oblig>0){ h+=`<div class="r"><span>Plus monthly support (not in division)</span><b>${fmt(oblig)}/mo for ${(+r.durYrs||0)} yr</b></div><div style="font-size:11px;color:var(--red);margin-top:3px">\u26a0 A monthly stream can be hard to collect if the payer is abroad or non-compliant; an up-front lump sum is more secure.</div>`; }
+  h+=`</div>`;
+  if(!collapsed){ h+=`<div class="exnote"><b>Alimony rules vary by state - research yours.</b> Florida (SB 1416, since 7/1/2023): durational alimony = lesser of need or 35% of the net-income difference; max duration 75% of a 20+ yr marriage (60% for 10-20 yr, 50% for 3-10 yr; generally none under 3 yr); no permanent/lifetime alimony; modifiable at the payer's retirement; a court can require life insurance to secure it. Other states differ - some still allow permanent/lifetime alimony and use different rates/caps. Set the %, duration and type above for your state. <a href="${esc(researchLink('alimony law duration cap types'))}" target="_blank" style="color:var(--accent);font-weight:700">Research your state &rarr;</a></div>`;
+    h+=`<div class="note-in"><input type="text" placeholder="note: why this amount / structure" value="${esc(r.note)}" data-change="upd" data-id="${esc(r.id)}" data-f="note"></div>`; }
+  h+=`</div>`; return h;
+}
+function childSupportHtml(r,collapsed){
+  const net=(+r.monthly||0)+(+r.childcare||0); const dir=r.direction||'receive';
+  let h=`<div class="item"><div class="itop"><span class="dot" style="background:${accColor('cash')}"></span>${nameField(r)}<span class="out">${net?(dir==='receive'?'+':'-')+fmt(net)+'/mo':'$0/mo'}</span></div>`;
+  if(!collapsed){
+    h+=`<div class="seg" style="margin:5px 0;font-size:11px"><button data-click="csdir" data-id="${esc(r.id)}" data-v="receive" class="${esc(dir==='receive'?'on':'')}">You receive</button><button data-click="csdir" data-id="${esc(r.id)}" data-v="pay" class="${esc(dir==='pay'?'on':'')}">You pay</button></div>`;
+    h+=`<div class="sub-f"><label>Number of children</label><input type="number" value="${esc(r.kids||0)}" data-change="upd" data-id="${esc(r.id)}" data-f="kids" style="width:56px"> <label style="min-width:110px">Your overnights %</label><input type="number" value="${esc(r.custodyPct||50)}" data-change="upd" data-id="${esc(r.id)}" data-f="custodyPct" style="width:56px"></div>`;
+    h+=`<div class="sub-f"><label>Monthly support (from state guideline)</label><input type="number" value="${esc(r.monthly||0)}" data-change="upd" data-id="${esc(r.id)}" data-f="monthly"></div>`;
+    h+=`<div class="sub-f"><label>Child-care / health /mo</label><input type="number" value="${esc(r.childcare||0)}" data-change="upd" data-id="${esc(r.id)}" data-f="childcare"></div>`;
+    h+=`<div class="hcalc"><div class="r tot"><span>Net child support</span><b>${dir==='receive'?'+':'-'}${fmt(net)}/mo</b></div></div>`;
+    h+=`<div class="exnote"><b>Child support &amp; custody vary by state - research yours.</b> Every state sets child support by its own guideline (usually an income-shares or percentage model) based on both parents' incomes, the number of children, overnights/custody split, child-care and health costs. Enter the amount from your state's official calculator. Custody/timesharing itself is a parenting plan, not a dollar figure, but it drives the support number. <a href="${esc(researchLink('child support guideline calculator'))}" target="_blank" style="color:var(--accent);font-weight:700">Find your state's calculator &rarr;</a></div>`;
+    h+=`<div class="note-in"><input type="text" placeholder="your note" value="${esc(r.note||'')}" data-change="upd" data-id="${esc(r.id)}" data-f="note"></div>`;
+  }
+  h+=`</div>`; return h;
+}
+function itemHtml(r,collapsed){
+  if(r.type==='house') return houseHtml(r,collapsed);
+  if(r.type==='alimony') return alimHtml(r,collapsed);
+  if(r.type==='childsupport') return childSupportHtml(r,collapsed);
+  let h=`<div class="item"><div class="itop">`;
+  if(r.contested) h+=`<span class="cb">Contested</span>`;
+  if(!collapsed) h+=`<input type="checkbox" ${r.inc?'checked':''} data-change="upd" data-id="${esc(r.id)}" data-f="inc">`;
+  h+=`<span class="dot" style="background:${accColor(r.acc)}"></span>${nameField(r)}<span class="out">${fmt(youShare(r))}</span></div>`;
+  if(r.contested){
+    if(r.type==='asset') h+=`<div class="sub-f"><label>Current total</label>${ni(r,'total',r.total)} <span class="splitwrap">${ni(r,'share',r.share)}% you</span></div>`;
+    h+=rangeBoxes(r,'low','lk','hi'); h+=presetHtml(r);
+  } else {
+    if(r.type==='asset'){ h+=`<div class="sub-f"><label>Current total</label>${ni(r,'total',r.total)} <span class="splitwrap">${ni(r,'share',r.share)}% you</span></div>`; }
+    else { h+=rangeBoxes(r,'low','lk','hi'); }
+  }
+  if(!collapsed){
+    h+=`<div class="itop" style="margin-top:5px">`;
+    h+=`<select data-change="upd" data-id="${esc(r.id)}" data-f="acc" style="max-width:150px">${ACCS.map(a=>`<option value="${esc(a[0])}" ${r.acc===a[0]?'selected':''}>${a[1]}</option>`).join('')}</select>`;
+    h+=`<select data-change="upd" data-id="${esc(r.id)}" data-f="type" style="max-width:140px">${TYPES.map(t=>`<option value="${esc(t[0])}" ${r.type===t[0]?'selected':''}>${t[1]}</option>`).join('')}</select>`;
+    h+=`<button class="mini ${r.contested?'on':''}" data-click="contest" data-id="${esc(r.id)}">${r.contested?'●contested':'○contested'}</button>`;
+    h+=`<button class="mini del" data-click="del" data-id="${esc(r.id)}">✕ remove</button></div>`;
+    if(r.ex) h+=`<div class="exnote"><b>Note:</b> ${esc(r.ex)}</div>`;
+    h+=`<div class="note-in"><input type="text" placeholder="your note" value="${esc(r.note)}" data-change="upd" data-id="${esc(r.id)}" data-f="note"></div>`;
+  }
+  h+=`</div>`; return h;
+}
+function buildDeal(target){
+  const pool=[];
+  C.rows.forEach(r=>{ if(!r.inc||r.noSum) return; if(r.type!=='asset'&&r.type!=='house') return; if(isSep(r)) return;
+    const v = r.type==='house'? houseEquity(r) : assetVal(r); if(v<=0) return; pool.push({name:r.name,value:v,cls:r.acc}); });
+  const RANK={secure:['realestate','qdro','taxable','cash','ira','illiquid','na','hardcollect','debt'],
+    cash:['cash','taxable','qdro','ira','realestate','illiquid','na','hardcollect','debt'],
+    tax:['realestate','qdro','taxable','cash','illiquid','na','hardcollect','debt','ira'],
+    balanced:['cash','taxable','realestate','qdro','ira','illiquid','na','hardcollect','debt']};
+  const order=RANK[C.dealPriority]||RANK.secure;
+  pool.sort((a,b)=> (order.indexOf(a.cls)-order.indexOf(b.cls)) || (b.value-a.value));
+  let rem=target; const basket=[];
+  for(const a of pool){ if(rem<=0.5) break; const take=Math.min(a.value,rem); basket.push({name:a.name,cls:a.cls,taken:take,partial:take<a.value-0.5}); rem-=take; }
+  const gap=Math.max(0,rem); const prof={liquid:0,retirement:0,realestate:0,illiquid:0};
+  basket.forEach(b=>{ if(b.cls==='cash'||b.cls==='taxable')prof.liquid+=b.taken; else if(b.cls==='qdro'||b.cls==='ira')prof.retirement+=b.taken; else if(b.cls==='realestate')prof.realestate+=b.taken; else prof.illiquid+=b.taken; });
+  return {basket,prof,gap,target};
+}
+function dealRec(p){ const spn=spouseName();
+  if(p==='secure') return 'If the other party may be hard to collect from (lives abroad, or has been non-compliant), take value you control NOW: keep the home (you hold title) and take retirement by QDRO (court-ordered, self-executing), plus taxable and cash accounts. Avoid anything that depends on them writing a check later.';
+  if(p==='cash') return 'Maximizes money you can spend soon: cash and taxable accounts first. But cashing retirement is taxed as ordinary income and selling the home adds ~6% costs + capital-gains tax. Take liquid accounts first; only tap retirement or sell the home if you still need more.';
+  if(p==='tax') return 'Lowest tax: keep the home (no tax until you choose to sell) and keep retirement AS retirement via QDRO (no tax until withdrawal, penalty-free in divorce). Avoid early IRA withdrawals (10% penalty). Trade-off: little cash in hand now.';
+  return 'A spread: liquid accounts for near-term living, the home, and retirement via QDRO. Switch to Max security, Max cash, or Defer tax to re-weight.';
+}
+function renderSaved(){
+  const chips=document.getElementById('savedchips');
+  if(chips) chips.innerHTML = C.scenarios.length ? `<span class="tag">${C.scenarios.length} saved</span>` : '<span class="tag">none saved yet</span>';
+  const el=document.getElementById('scenbar'); if(!el)return; let h='';
+  if(C.scenarios.length){
+    h+='<div class="sec" style="padding:9px 13px"><div class="lbl">Saved scenarios - rename, load or delete</div>';
+    C.scenarios.forEach((x,i)=>{ h+=`<div class="savedrow"><input type="text" value="${esc(x.name)}" data-change="renamescen" data-i="${esc(i)}"><button class="mini" data-click="loadscen" data-i="${esc(i)}">load</button><button class="mini del" data-click="delscen" data-i="${esc(i)}">delete</button></div>`; });
+    h+='</div>';
+  }
+  if(C.compareMode) h+=renderCompare();
+  if(C.histOpen) h+=renderHist();
+  el.innerHTML=h; el.style.display=h?'':'none';
+}
+function renderCompare(){
+  const cols=[{name:'Current',b:scenarioBreakdown(currentCfg())}].concat(C.scenarios.map((x)=>({name:x.name,b:scenarioBreakdown(x.cfg),saved:true})));
+  const rows=[['You get','you',1],[spouseName()+' gets','sp',1],['Accounts','accounts',0],['Home','house',0],['Business','business',0],['Alimony','alimony',0],['Add-backs','addbacks',0]];
+  let h='<div class="sec" style="padding:10px 13px"><div style="display:flex;justify-content:space-between;align-items:center"><span class="nm" style="font-weight:700;color:var(--navy)">Compare scenarios (your side)</span><button class="mini" data-click="togglecompare">close</button></div>';
+  if(!C.scenarios.length){ h+='<div class="tag" style="margin-top:5px">Save at least one scenario ( Save current) to compare it against where you are now.</div></div>'; return h; }
+  h+='<div class="cmp"><table><tr><th></th>';
+  cols.forEach((c,ci)=> h+=`<th>${esc(c.name)}${c.saved?` <button class="mini del" data-click="delscen" data-i="${esc(ci-1)}" style="padding:1px 5px">\u2715</button>`:''}</th>`);
+  h+='</tr>';
+  rows.forEach(([lbl,key,tot])=>{ h+=`<tr class="${esc(tot?'tot':'')}"><td>${esc(lbl)}</td>`; cols.forEach(c=> h+=`<td>${fmt(c.b[key])}</td>`); h+='</tr>'; });
+  h+='</table></div>';
+  h+='<div class="lbl" style="margin-top:8px">Rename saved</div>';
+  C.scenarios.forEach((x,i)=> h+=`<input type="text" value="${esc(x.name)}" data-change="renamescen" data-i="${esc(i)}" style="width:100%;margin-top:3px;font-size:12px">`);
+  h+='</div>'; return h;
+}
+function renderHist(){
+  let h='<div class="sec" style="padding:8px 13px"><div style="display:flex;justify-content:space-between;align-items:center"><span class="lbl">Recent changes</span><span>'+((C._undo&&C._undo.length)?'<button class="mini" data-click="undo">\u21b6 Undo last</button> ':'')+'<button class="mini" data-click="togglehist">close</button></span></div>';
+  if(C._undo&&C._undo.length) C._undo.slice(-8).reverse().forEach(e=> h+=`<div class="hist">\u2022 ${esc(e.label)}</div>`); else h+='<div class="tag">no changes yet</div>';
+  h+='</div>'; return h;
+}
+function compute(){
+  const spouse=C.tab==='spouse', spn=spouseName();
+  let you=0,sp=0,cs=0;
+  let acc=0,biz=0,oth=0,aliIn=0,addIn=0,debts=0,sep=0,monthlyOblig=0, accSp=0,bizSp=0,othSp=0,aliSp=0,addSp=0,debtsSp=0,sepSp=0;
+  const liq={liquid:0,qdro:0,tied:0}; const liqItems={liquid:[],qdro:[],tied:[]};
+  C.rows.forEach(r=>{ if(!r.inc||r.noSum) return; if(C.mode==='division'&&isSep(r)) return;
+    if(r.cat==='children'){ cs+=youShare(r); return; }
+    const y=youShare(r), sv=spShare(r); you+=y; sp+=sv;
+    if(r.type==='house') return;
+    if(r.type==='asset'){ if(r.cat==='accounts'){acc+=y;accSp+=sv;} else if(r.cat==='business'){biz+=y;bizSp+=sv;} else {oth+=y;othSp+=sv;} }
+    else if(r.type==='alimony'){ aliIn+=y; aliSp+=sv; monthlyOblig+=alimMonthlyOblig(r); }
+    else if(r.type==='inflow'){ addIn+=y; addSp+=sv; }
+    else if(r.type==='debtYou'||r.type==='debtSpouse'){ debts+=y; debtsSp+=sv; }
+    else if(r.type==='sepYou'||r.type==='sepSpouse'){ sep+=y; sepSp+=sv; }
+    const a=spouse?sv:y; if(a>0){ const bb=LIQ[r.acc]||'liquid'; if(bb!=='x'){ liq[bb]+=a; liqItems[bb].push([r.name,a]); } }
+  });
+  const hr=C.rows.find(r=>r.type==='house' && r.inc);
+  let keep=false,equity=0,buyoutB=0,fa=0,fb=0, houseYou=0,houseSp=0,sellCosts=0,sellTax=0,netProc=0;
+  const accAvail=acc;
+  if(hr){ equity=houseEquity(hr); keep=(hr.decision!=='sell');
+    houseYou=youShare(hr); houseSp=spShare(hr);
+    if(keep){ buyoutB=houseBuyout(hr); fa=Math.min(buyoutB,Math.max(0,aliIn)); fb=Math.max(0,buyoutB-fa); }
+    else { sellCosts=houseSellCosts(hr); sellTax=houseTax(hr); netProc=houseNet(hr); }
+    const ha=spouse?spShare(hr):youShare(hr);
+    if(ha>0){ const bb=keep?'tied':'liquid'; liq[bb]+=ha; liqItems[bb].push([hr.name+(keep?' (equity, until sold)':' (sale proceeds)'),ha]); }
+  }
+  const active=spouse?sp:you, other=spouse?you:sp, tot=you+sp;
+  if(C.tab==='deal'){
+    const {basket,prof,gap,target}=buildDeal(you);
+    document.getElementById('mainLbl').textContent='Deal Builder';
+    document.getElementById('mainAmt').textContent=fmt(target);
+    document.getElementById('mainPct').textContent='how to compose your total from real assets';
+    document.getElementById('modeNote').textContent='';
+    const mx=Math.max(1,prof.liquid+prof.retirement+prof.realestate+prof.illiquid);
+    const bar=(v,c)=> v>0?`<div style="width:${Math.round(v/mx*100)}%;background:${c}"></div>`:'';
+    const pl=(lbl,v,c)=> v>0?`<div class="liq-row"><span class="d"><i style="display:inline-block;background:${c}"></i>${lbl}</span><b>${fmt(v)}</b></div>`:'';
+    let h='<div class="seg" style="margin-bottom:8px;font-size:10px;flex-wrap:wrap">'+
+      [['secure','Max security'],['cash','Max cash now'],['tax','Defer tax'],['balanced','Balanced']].map(p=>`<button data-click="dealpri" data-v="${esc(p[0])}" class="${esc(C.dealPriority===p[0]?'on':'')}">${p[1]}</button>`).join('')+'</div>';
+    h+='<div style="display:flex;height:12px;border-radius:6px;overflow:hidden;margin:4px 0 7px;background:var(--line)">'+bar(prof.liquid,'var(--green)')+bar(prof.retirement,'var(--blue)')+bar(prof.realestate,'var(--amber)')+bar(prof.illiquid,'var(--red)')+'</div>';
+    h+=pl('Cash / liquid now',prof.liquid,'var(--green)')+pl('Retirement (QDRO/IRA)',prof.retirement,'var(--blue)')+pl('Home (real estate)',prof.realestate,'var(--amber)')+pl('Business / offset',prof.illiquid,'var(--red)');
+    h+='<div class="lbl" style="margin-top:9px">Which assets to take</div>';
+    basket.forEach(b=> h+=`<div class="bk"><span class="l">${esc(b.name)}${b.partial?' <span style="color:var(--amber)">(part)</span>':''}</span><span class="v">${fmt(b.taken)}</span></div>`);
+    if(gap>0.5) h+=`<div class="liq-note">Shortfall ${fmt(gap)}: the included marital assets don\u2019t fully cover your total. Close it with other assets, a reclassification of separate property, or ${esc(spouseName())} paying cash. Cash the other party must pay later is the least secure piece.</div>`;
+    h+=`<div class="flow" style="margin-top:9px"><h4>Recommendation</h4><div style="font-size:11.5px;color:var(--muted)">${dealRec(C.dealPriority)}</div></div>`;
+    document.getElementById('bk').innerHTML=h;
+    document.getElementById('flow').innerHTML=''; document.getElementById('liq').innerHTML='';
+    return;
+  }
+  document.getElementById('mainLbl').textContent=(spouse?spn:'You')+' get';
+  document.getElementById('mainAmt').textContent=fmt(active);
+  document.getElementById('mainPct').textContent=tot?Math.round(active/tot*100)+'% of combined \u00b7 other side '+fmt(other):'';
+  const _ali=C.rows.find(r=>r.type==='alimony'); const isFloor=(C.scen==='low' && _ali && _ali.structure==='periodic');
+  const isTarget=(C.scen==='hi' && _ali && _ali.structure==='lump');
+  document.getElementById('modeNote').innerHTML = (isFloor?'<span style=\"color:var(--red);font-weight:700\">\u26a0 Their best case: your secured FLOOR (periodic alimony, which is less secure)</span><br>':(isTarget?'<span style=\"color:var(--green);font-weight:700\">Your target (every contested item your way)</span><br>':''))+ (C.mode==='wealth' ? 'Totals include each side\u2019s separate property.' : 'Division only: what each gets from splitting the marital estate.');
+  const B=[];
+  if(!spouse){
+    B.push(['Accounts & retirement', acc]);
+    B.push([keep?'Home equity (your share, you keep the house)':'Home sale proceeds (your share)', houseYou]);
+    B.push(['Business', biz]); if(oth) B.push(['Other assets', oth]);
+    B.push(['Alimony', aliIn]);
+    B.push(['Add-backs / fees', addIn]);
+    if(Math.round(debts)!==0) B.push(['Debts & costs', debts]);
+    if(Math.round(sep)!==0) B.push(['Your separate property', sep]);
+  } else {
+    B.push(['Accounts & retirement', accSp]);
+    B.push([keep?'Buyout from you (received)':'Home sale proceeds (their share)', houseSp]);
+    B.push(['Business', bizSp]); if(othSp) B.push(['Other assets', othSp]);
+    if(Math.round(aliSp)!==0) B.push(['Alimony paid to you', aliSp]);
+    if(Math.round(addSp)!==0) B.push(['Add-backs paid to you', addSp]);
+    if(Math.round(debtsSp)!==0) B.push(['Debts', debtsSp]);
+    if(Math.round(sepSp)!==0) B.push(['Their separate property', sepSp]);
+  }
+  let bh='<div class="lbl" style="margin-bottom:3px">'+(spouse?esc(spn)+"'s":'Your')+' total, bucket by bucket</div>';
+  B.forEach(x=>{ if(x[1]===0) return; const neg=x[1]<0; bh+=`<div class="bk"><span class="l">${esc(x[0])}</span><span class="v" style="color:${neg?'var(--red)':'var(--ink)'}">${(neg?'-':'+')+fmt(Math.abs(x[1]))}</span></div>`; });
+  bh+=`<div class="bk tot"><span class="l">= ${spouse?esc(spn):'You'} get</span><span class="v">${fmt(active)}</span></div>`;
+  if(!spouse && monthlyOblig>0) bh+=`<div class="bk"><span class="l" style="color:var(--amber)">Plus monthly support (not in total)</span><span class="v" style="color:var(--amber)">${fmt(monthlyOblig)}/mo</span></div>`;
+  if(cs) bh+=`<div class="bk"><span class="l">Child support</span><span class="v">${fmt(cs)}/mo</span></div>`;
+  document.getElementById('bk').innerHTML=bh;
+  const fl=document.getElementById('flow');
+  if(hr && !spouse && keep && buyoutB>0){ const mxw=Math.max(buyoutB,1);
+    const fromAcc=Math.min(fb,Math.max(0,accAvail)); const short=Math.max(0,fb-Math.max(0,accAvail));
+    const aliTot=C.rows.filter(r=>r.inc&&!r.noSum&&r.cat==='alimony').reduce((p,r)=>p+youShare(r),0); const leftover=Math.max(0,aliTot-fa);
+    fl.innerHTML=`<div class="flow"><h4>Keeping the home: buy out ${esc(spn)} for ${fmt(buyoutB)}</h4>`+
+      `<div class="src"><div class="t"><span class="n">From your secured alimony</span><b>${fmt(fa)}</b></div><div class="b"><div style="width:${Math.round(fa/mxw*100)}%;background:var(--green)"></div></div></div>`+
+      `<div class="src"><div class="t"><span class="n">From your accounts</span><b>${fmt(fromAcc)}</b></div><div class="b"><div style="width:${Math.round(fromAcc/mxw*100)}%;background:var(--amber)"></div></div></div>`+
+      (short>0?`<div class="warn">\u26a0 Short ${fmt(short)}: your alimony + accounts can't cover the buyout, so you can't keep the whole house without more secured cash (this is the floor problem). Sell, or take a smaller share.</div>`
+       :fb>0?`<div class="warn">\u26a0 Alimony is short by ${fmt(fb)}; it comes out of your accounts. If from a retirement account, add tax/penalty.</div>`
+       :`<div class="oknote">\u2713 Covered by alimony, with ${fmt(leftover)} left over.</div>`)+`</div>`;
+  } else if(hr && !spouse && !keep){
+    fl.innerHTML=`<div class="flow"><h4>Selling the home</h4>`+
+      `<div class="src"><div class="t"><span class="n">Equity</span><b>${fmt(equity)}</b></div></div>`+
+      `<div class="src"><div class="t"><span class="n">\u2212 Selling costs</span><b>-${fmt(sellCosts)}</b></div></div>`+
+      `<div class="src"><div class="t"><span class="n">\u2212 Capital-gains / recapture tax</span><b>-${fmt(sellTax)}</b></div></div>`+
+      `<div class="src"><div class="t"><span class="n" style="color:var(--ink);font-weight:700">Net proceeds, split</span><b>${fmt(netProc)}</b></div></div>`+
+      `<div class="oknote" style="color:var(--muted)">Your ${+hr.share||0}% = ${fmt(houseYou)}. Tax applies because you sell during the divorce.</div></div>`;
+  } else fl.innerHTML='';
+  const LAB={liquid:['Liquid / soon','var(--green)'],qdro:['QDRO (penalty-free, taxed)','var(--blue)'],tied:['Tied up / penalized','var(--red)']};
+  let lh='<div class="lbl" style="margin-bottom:3px">'+(spouse?esc(spn)+"'s":'Your')+' money by access <span style="text-transform:none;font-weight:400;color:var(--muted)">(tap to see sources)</span></div>';
+  ['liquid','qdro','tied'].forEach(k=>{ const open=liqExp.has(k);
+    lh+=`<div class="liq-row" data-click="liqtoggle" data-b="${esc(k)}" style="cursor:pointer"><span class="d"><i style="background:${LAB[k][1]}"></i>${open?'\u25be':'\u25b8'} ${LAB[k][0]}</span><b>${fmt(liq[k])}</b></div>`;
+    if(open){ if(!liqItems[k].length) lh+='<div class="liq-sub">(none)</div>'; else liqItems[k].slice().sort((p,q)=>q[1]-p[1]).forEach(it=> lh+=`<div class="liq-sub"><span>${esc(it[0])}</span><span>${fmt(it[1])}</span></div>`); }
+  });
+  if(!spouse && keep && buyoutB>0) lh+=`<div class="liq-note">You pay a ${fmt(buyoutB)} buyout from this money (alimony first). Net liquid after the buyout \u2248 ${fmt(Math.max(0,liq.liquid-buyoutB))}.</div>`;
+  lh+=`<div style="font-size:10.5px;color:var(--muted);margin-top:6px">Liquid = cash & taxable (available soon) · QDRO = 401(k) split, penalty-free but taxed · Tied = IRA (penalty if early), business, real estate.</div>`;
+  document.getElementById('liq').innerHTML=lh;
+}
+
+function upd(id,f,v){ const r=R(id); if(!r)return; const old=r[f]; pushHistory(r.name+': '+f+' '+(typeof old==='number'?fmt(old):old)+' \u2192 '+(typeof v==='string'&&/^-?\d/.test(v)?fmt(+v):v)); r[f]=v; persist(); render(); }
+function pickCol(id,k){ const r=R(id); if(!r)return; r.pick=(r.pick===k)?null:k; persist(); render(); }
+function papply(id,v){ const r=R(id); if(!r)return; if(r.type==='house') r['apr'+SK[col(r)]]=v; else r[col(r)]=v; persist(); render(); }
+function pset(id,i,f,v){ R(id).presets[i][f]= f==='value'?(+v||0):v; persist(); render(); }
+function padd(id){ R(id).presets=R(id).presets||[]; R(id).presets.push({label:'Option',value:0}); persist(); render(); }
+function pdel(id,i){ R(id).presets.splice(i,1); persist(); render(); }
+function adjadd(id){ const r=R(id); r.adj=r.adj||[]; r.adj.push({label:'Adjustment',amt:0}); persist(); render(); }
+function adjset(id,i,f,v){ R(id).adj[i][f]= f==='amt'?(+v||0):v; persist(); render(); }
+function adjdel(id,i){ R(id).adj.splice(i,1); persist(); render(); }
+function toggle(k){ C.exp[k]=!C.exp[k]; render(); }
+function addRow(cat){ pushHistory('add field'); C.rows.push({id:rid(),cat,name:'New item (name me)',acc:'na',type:'asset',total:0,low:'',lk:0,hi:'',share:50,inc:true,contested:false,noSum:false,ex:'',note:'',pick:null}); C.exp[cat]=true; C.editSec[cat]=true; persist(); render(); }
+function delRow(id){ const r=R(id); pushHistory('remove '+(r?r.name:'field')); C.rows=C.rows.filter(x=>x.id!==id); persist(); render(); }
+function exportJSON(){ const b=new Blob([JSON.stringify(C,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='divorce-scenario.json'; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },1000); }
+function importFile(el){ const f=el.files[0]; if(!f)return; const rd=new FileReader(); rd.onload=()=>{ try{ const o=JSON.parse(rd.result); if(o&&Array.isArray(o.rows)){ C=o; migrate(); persist(); render(); } else alert('That file is not a backup from this calculator.'); }catch(x){ alert('Could not read that file. Choose a backup saved with Download backup.'); } el.value=''; }; rd.readAsText(f); }
+let _resetArm=false; function resetAll(){ const btn=[...document.querySelectorAll('[data-click=reset]')][0];
+  if(!_resetArm){ _resetArm=true; if(btn)btn.textContent='\u21ba Tap again to reset'; setTimeout(()=>{ _resetArm=false; const b2=[...document.querySelectorAll('[data-click=reset]')][0]; if(b2)b2.textContent='\u21ba Clear / reset'; },3000); return; }
+  _resetArm=false; C=D(); migrate(); persist(); render(); }
+function toggleTheme(){ const r=document.documentElement; const cur=r.getAttribute('data-theme')||(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'); r.setAttribute('data-theme', cur==='dark'?'light':'dark'); }
+
+function applyPreset(w){ pushHistory('preset: '+w);
+  const ali=C.rows.find(r=>r.type==='alimony');
+  C.rows.forEach(r=>{ if('pick' in r) r.pick=null; });
+  if(w==='floor'){ C.scen='low'; if(ali) ali.structure='periodic'; }
+  else if(w==='likely'){ C.scen='lk'; if(ali) ali.structure='lump'; }
+  else if(w==='target'){ C.scen='hi'; if(ali){ ali.structure='lump'; ali.amode='manual'; } }
+  persist(); render();
+}
+document.addEventListener('click',function(e){
+  if(['INPUT','SELECT','TEXTAREA'].indexOf(e.target.tagName)>=0) return;
+  const el=e.target.closest('[data-click]'); if(!el) return; const d=el.dataset;
+  switch(d.click){
+    case 'theme': toggleTheme(); break;
+    case 'export': exportJSON(); break;
+    case 'impclick': document.getElementById('imp').click(); break;
+    case 'reset': resetAll(); break;
+    case 'scen': C.scen=d.s; persist(); render(); break;
+    case 'preset': applyPreset(d.v); break;
+    case 'editsec': C.editSec[d.k]=!C.editSec[d.k]; if(C.editSec[d.k])C.exp[d.k]=true; persist(); render(); break;
+    case 'savescen': saveScenario(); break;
+    case 'loadscen': loadScenario(+d.i); break;
+    case 'delscen': delScenario(+d.i); break;
+    case 'togglecompare': C.compareMode=!C.compareMode; render(); break;
+    case 'togglehist': C.histOpen=!C.histOpen; render(); break;
+    case 'undo': undo(); break;
+    case 'mode': C.mode=d.m; persist(); render(); break;
+    case 'tab': C.tab=d.t; render(); break;
+    case 'dealpri': C.dealPriority=d.v; persist(); render(); break;
+    case 'toggle': toggle(d.k); break;
+    case 'liqtoggle': if(liqExp.has(d.b))liqExp.delete(d.b); else liqExp.add(d.b); render(); break;
+    case 'astruct': { const r=R(d.id); if(r){ r.structure=d.v; persist(); render(); } break; }
+    case 'amode': { const r=R(d.id); if(r){ r.amode=d.v; persist(); render(); } break; }
+    case 'csdir': { const r=R(d.id); if(r){ r.direction=d.v; persist(); render(); } break; }
+    case 'pick': pickCol(d.id,d.c); break;
+    case 'papply': papply(d.id,+d.v); break;
+    case 'pedit': pEdit.add(d.id); render(); break;
+    case 'pdone': pEdit.delete(d.id); render(); break;
+    case 'padd': padd(d.id); break;
+    case 'pdel': pdel(d.id,+d.i); break;
+    case 'adjadd': adjadd(d.id); break;
+    case 'adjdel': adjdel(d.id,+d.i); break;
+    case 'hdec': { const r=R(d.id); if(r){ r.decision=d.d; persist(); render(); } break; }
+    case 'contest': { const r=R(d.id); if(r){ if(!r.contested && r.type==='asset' && (+r.low||0)===0 && (+r.lk||0)===0 && (+r.hi||0)===0 && (+r.total||0)!==0){ r.low=r.lk=r.hi=+r.total; } upd(d.id,'contested',!r.contested); } break; }
+    case 'del': delRow(d.id); break;
+    case 'add': addRow(d.k); break;
+  }
+});
+document.addEventListener('change',function(e){
+  const el=e.target, d=el.dataset; if(!d||!d.change) return;
+  const v = el.type==='checkbox'?el.checked:el.value;
+  switch(d.change){
+    case 'case': C.case[+d.i][1]=v; persist(); render(); break;
+    case 'upd': upd(d.id,d.f,v); break;
+    case 'adjset': adjset(d.id,+d.i,d.f,v); break;
+    case 'pset': pset(d.id,+d.i,d.f,v); break;
+    case 'secnote': C.secNotes[d.k]=v; persist(); break;
+    case 'loadscensel': if(v!=='') loadScenario(+v); break;
+    case 'renamescen': renameScenario(+d.i,v); break;
+    case 'import': importFile(el); break;
+  }
+});
+loadLS(); render();
+</script>
+</body>
+</html>
