@@ -254,6 +254,11 @@
   #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   @media(max-width:600px){.aibtn{font-size:11px;padding:6px 8px}}
   @media print{.modal,#toast{display:none!important}}
+  .btn.danger{background:var(--red);border-color:var(--red);color:#fff}
+  .rkeep{background:var(--chip);border-radius:9px;padding:8px 12px;margin:8px 0;font-size:13px}.rkeep ul{margin:4px 0 0;padding-left:18px}.rkeep li{margin:3px 0}
+  .rmore{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;margin:6px 0;cursor:pointer}.rmore input{margin-top:2px}
+  #toast.act{pointer-events:auto}
+  .tundo{margin-left:10px;border:1px solid currentColor;background:transparent;color:inherit;border-radius:7px;padding:3px 10px;font:inherit;font-weight:700;cursor:pointer}
 </style>
 </head>
 <body>
@@ -276,8 +281,9 @@
           <button type="button" role="menuitem" data-click="export">&#11015; Download backup</button>
           <button type="button" role="menuitem" data-click="impclick">&#11014; Load backup</button>
           <button type="button" role="menuitem" data-click="print">&#128424; Print / save PDF</button>
-          <button type="button" role="menuitem" data-click="togglehist">&#8630; History (undo)</button>
-          <button type="button" role="menuitem" class="danger" data-click="reset">&#8634; Clear / reset</button>
+          <button type="button" role="menuitem" data-click="undo">&#8630; Undo last change</button>
+          <button type="button" role="menuitem" data-click="togglehist">&#9776; Change history</button>
+          <button type="button" role="menuitem" class="danger" data-click="reset">&#8634; Clear figures<span class="mi">Keeps saved scenarios and locked items</span></button>
           <div class="savehint">Your work auto-saves in <b>this</b> browser until you clear it. Use <b>Download backup</b> to keep a copy or move to another device; <b>Load backup</b> brings it back.</div>
         </div>
       </div>
@@ -317,7 +323,7 @@
           <li><b>Support rules vary by state.</b> For alimony and child support, use your state's official guideline or calculator, or the figures from your attorney.</li>
         </ul>
       </div>
-      <p><b>What "saving" means.</b> Everything you type - including saved scenarios - stays in your own browser on your device. Nothing is uploaded, sent, or stored on any server. "Save current as a scenario" (in the Scenarios section) keeps a named version in that browser; <b>File &#9662;</b> at the top right has "Download backup," which saves a file you control and can re-import on any device, and "Clear / reset," which (like clearing your browser data) erases everything. <b>Best practice: download a backup after any important changes</b> so you always have a copy you trust.</p>
+      <p><b>What "saving" means.</b> Everything you type - including saved scenarios - stays in your own browser on your device. Nothing is uploaded, sent, or stored on any server. "Save current as a scenario" (in the Scenarios section) keeps a named version in that browser; <b>File &#9662;</b> at the top right has "Download backup," which saves a file you control and can re-import on any device, and "Clear figures," which removes your items but keeps saved scenarios and locked items. Clearing your browser data erases everything. <b>Best practice: download a backup after any important changes</b> so you always have a copy you trust.</p>
       <p class="warn"><b>Please work with a professional - this does not replace one.</b> This is an educational planning tool, <b>not legal, tax, or financial advice</b>, and not a substitute for an attorney, a forensic or financial professional, or an official state calculation. Divorce laws, alimony types and caps, child-support guidelines, imputed income, and tax treatment vary a great deal by state and change over time; any formulas or percentages you enter should come from your own state's rules or your attorney. The results are estimates based only on what you enter and on simplifying assumptions - they can be incomplete, out of date, or wrong, and the tool may contain errors. <b>Verify every figure with your own attorney and financial professionals. Use this only to understand scenarios and prepare better questions - never to make firm decisions, negotiate, or file anything.</b></p>
       <p class="warn"><b>No guarantee and no liability.</b> This tool is provided "as is." The creator makes no guarantee of accuracy, completeness, or fitness for any purpose, and accepts no liability for any decisions, losses, or outcomes arising from its use. By using it you accept full responsibility for checking all numbers with qualified professionals before relying on anything here.</p>
       <p class="warn"><b>Copyright and permitted use.</b> &copy; 2026 Divorce Scenario Calculator. All rights reserved. This tool, including its code, design, layout, text, and calculation methods, is protected by copyright. You may use it for free, for your own situation, on this website. You may not copy, download to republish, modify, redistribute, host elsewhere, sell, or build a product from any part of it without written permission. The numbers, notes, and arguments you enter are yours.</p>
@@ -539,8 +545,8 @@ function aiApply(){ if(!aiPending) return; const m=document.getElementById('moda
     r.cat=sec; r.name=String(a.name||'').slice(0,300); Object.keys(flds).forEach(f=>{ if(AIF[k].indexOf(f)>=0&&f!=='name'){ try{ r[f]=aiClean(k,f,flds[f]); }catch(e){} } });
     if(a.args&&typeof a.args==='object'){ r.args={}; ARGK.forEach(x=>{ if(a.args[x]) r.args[x]=String(a.args[x]).slice(0,4000); }); }
     C.rows.push(r); C.exp[sec]=true; n++; });
-  aiPending=null; closeModal(); persist(); render(); toast(n?`\u2713 Applied ${n} change${n!==1?'s':''} from your AI. Undo is in File \u25be > History.`:'No changes applied.'); }
-function toast(t){ let el=document.getElementById('toast'); if(!el){ el=document.createElement('div'); el.id='toast'; el.setAttribute('role','status'); document.body.appendChild(el); } el.textContent=t; el.classList.add('show'); clearTimeout(window.__tt); window.__tt=setTimeout(()=>el.classList.remove('show'),5000); }
+  aiPending=null; closeModal(); persist(); render(); toast(n?`\u2713 Applied ${n} change${n!==1?'s':''} from your AI.`:'No changes applied.',!!n); }
+function toast(t,undoable){ let el=document.getElementById('toast'); if(!el){ el=document.createElement('div'); el.id='toast'; el.setAttribute('role','status'); document.body.appendChild(el); } el.innerHTML=`<span>${esc(t)}</span>`+(undoable?' <button type="button" class="tundo" data-click="undo">\u21b6 Undo</button>':''); el.classList.add('show'); el.classList.toggle('act',!!undoable); clearTimeout(window.__tt); window.__tt=setTimeout(()=>el.classList.remove('show','act'),undoable?9000:5000); }
 function aiFromHash(){ const h=location.hash||''; if(h.indexOf('#ai=')!==0) return null; let u=null; try{ u=parseAIUpdate(h); }catch(e){ u={__err:e.message}; } try{ history.replaceState(null,'',location.href.split('#')[0]); }catch(e){} return u; }
 let aiFromLink=null;
 function sepTag(r){ if(!isSep(r)) return ''; return `<span class="cb sep" title="Separate (non-marital) property is not split. It counts only in the Total wealth view.">Separate${r.type==='sepYou'?' - yours':" - spouse's"}${C.mode==='division'?' (Total wealth only)':''}</span>`; }
@@ -564,7 +570,7 @@ function hasRange(r){ return ['low','hi','aprLow','aprHi','taxLow','taxHi','spNe
 const WK=['rows','scen','mode','tab','dealPriority','case','exp','editSec','secNotes'];
 function workSnap(){ const o={}; WK.forEach(k=>o[k]=C[k]); return JSON.stringify(o); }
 function pushHistory(label){ C._undo=C._undo||[]; C._undo.push({label,snap:workSnap()}); if(C._undo.length>40)C._undo.shift(); }
-function undo(){ if(!C._undo||!C._undo.length)return; const e=C._undo.pop(); const o=JSON.parse(e.snap); WK.forEach(k=>{ if(k in o) C[k]=o[k]; }); migrate(); persist(); render(); }
+function undo(){ if(!C._undo||!C._undo.length){ toast('Nothing to undo.'); return; } const e=C._undo.pop(); setTimeout(()=>toast('\u21b6 Undid: '+e.label),0); const o=JSON.parse(e.snap); WK.forEach(k=>{ if(k in o) C[k]=o[k]; }); if('goals' in o) C.goals=o.goals; migrate(); persist(); render(); }
 function smartName(){ let nm='Scenario '+(C.scenarios.length+1)+' ('+scenName()+')'; let cand=nm,i=1; while(C.scenarios.some(x=>x.name===cand)){ i++; cand=nm+' #'+i; } return cand; }
 function saveScenario(){ C.scenarios.push({name:smartName(), cfg:JSON.parse(workSnap())}); C.compareMode=true; persist(); render(); }
 function loadScenario(i){ const sc=C.scenarios[i]; if(!sc)return; pushHistory('load scenario: '+sc.name); WK.forEach(k=>{ if(k in sc.cfg) C[k]=JSON.parse(JSON.stringify(sc.cfg[k])); }); migrate(); persist(); render(); }
@@ -951,12 +957,24 @@ function adjset(id,i,f,v){ R(id).adj[i][f]= f==='amt'?(+v||0):v; persist(); rend
 function adjdel(id,i){ R(id).adj.splice(i,1); persist(); render(); }
 function toggle(k){ C.exp[k]=!C.exp[k]; render(); }
 function addRow(cat,i){ pushHistory('add item'); const sg=SUG[cat]&&SUG[cat][i]; const r=sg?sg[1]():customRow(cat); C.rows.push(r); C.exp[cat]=true; persist(); render(); }
-function delRow(id){ const r=R(id); pushHistory('remove '+(r?dispName(r):'field')); C.rows=C.rows.filter(x=>x.id!==id); persist(); render(); }
+function delRow(id){ const r=R(id); const nm=r?dispName(r):'field'; pushHistory('remove '+nm); C.rows=C.rows.filter(x=>x.id!==id); persist(); render(); toast(`Removed "${nm}".`,true); }
 function exportJSON(){ const b=new Blob([JSON.stringify(C,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='divorce-scenario.json'; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },1000); }
 function importFile(el){ const f=el.files[0]; if(!f)return; const rd=new FileReader(); rd.onload=()=>{ try{ const o=JSON.parse(rd.result); if(o&&Array.isArray(o.rows)){ C=o; migrate(); persist(); render(); } else alert('That file is not a backup from this calculator.'); }catch(x){ alert('Could not read that file. Choose a backup saved with Download backup.'); } el.value=''; }; rd.readAsText(f); }
-let _resetArm=false; function resetAll(){ const btn=document.querySelector('[data-click=reset]');
-  if(!_resetArm){ _resetArm=true; if(btn)btn.textContent='\u21ba Tap again to reset'; setTimeout(()=>{ _resetArm=false; const b2=document.querySelector('[data-click=reset]'); if(b2)b2.textContent='\u21ba Clear / reset'; },3000); return; }
-  _resetArm=false; C=D(); migrate(); persist(); render(); }
+function resetAll(){ const keep=C.rows.filter(isLocked), clear=C.rows.length-keep.length, ns=(C.scenarios||[]).length;
+  openModal(`<h3>Clear your figures?</h3>
+   <p>This will remove <b>${clear} item${clear!==1?'s':''}</b> and the amounts, notes, and arguments in them, so you can start fresh.</p>
+   <div class="rkeep"><b>These stay:</b><ul>
+     <li><b>Saved scenarios</b> (${ns} saved) - you can load any of them again.</li>
+     <li><b>Locked items</b> (${keep.length} locked) - with their amounts, notes, and arguments. Unlock an item first if you want it cleared.</li>
+     <li>Your Low / Likely / High setting, display choices, and agreement to the terms.</li></ul></div>
+   <label class="rmore"><input type="checkbox" id="rmore"> Also clear basic info (state and dates), my goals, and section notes</label>
+   <p class="hint">You can undo this right afterward, or from File \u25be > Undo last change.</p>
+   <div class="mbtns"><button class="btn ghost" data-click="mclose">Cancel</button><button class="btn danger" data-click="resetgo">Clear figures</button></div>`); }
+function resetGo(){ const more=!!(document.getElementById('rmore')||{}).checked; const o={}; WK.forEach(k=>o[k]=C[k]); o.goals=C.goals;
+  C._undo=C._undo||[]; C._undo.push({label:'clear figures',snap:JSON.stringify(o)}); if(C._undo.length>40)C._undo.shift();
+  const kept=C.rows.filter(isLocked); const n=C.rows.length-kept.length; C.rows=kept; noteOpen.clear();
+  if(more){ const d=D(); C.case=d.case; C.goals={checks:[],text:''}; C.secNotes={}; }
+  closeModal(); persist(); renderCase(); render(); toast(`\u2713 Cleared ${n} item${n!==1?'s':''}. Kept ${kept.length} locked item${kept.length!==1?'s':''} and ${(C.scenarios||[]).length} saved scenario${(C.scenarios||[]).length!==1?'s':''}.`,true); }
 function toggleTheme(){ const r=document.documentElement; const cur=r.getAttribute('data-theme')||(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'); r.setAttribute('data-theme', cur==='dark'?'light':'dark'); }
 
 document.addEventListener('click',function(e){
@@ -978,6 +996,7 @@ document.addEventListener('click',function(e){
     case 'print': printSummary(); break;
     case 'impclick': document.getElementById('imp').click(); break;
     case 'reset': resetAll(); break;
+    case 'resetgo': resetGo(); break;
     case 'scen': C.scen=d.s; C.rows.forEach(r=>{ if(!r.locked) r.pick=null; }); persist(); render(); break;
     case 'lock': toggleLock(d.id); break;
     case 'editsec': C.editSec[d.k]=!C.editSec[d.k]; if(C.editSec[d.k])C.exp[d.k]=true; persist(); render(); break;
@@ -985,7 +1004,7 @@ document.addEventListener('click',function(e){
     case 'loadscen': loadScenario(+d.i); break;
     case 'delscen': delScenario(+d.i); break;
     case 'togglecompare': C.compareMode=!C.compareMode; render(); break;
-    case 'togglehist': C.histOpen=!C.histOpen; render(); break;
+    case 'togglehist': if(!C.histOpen) setTimeout(()=>{ const hb=document.getElementById('histbar'); if(hb&&hb.firstChild) hb.scrollIntoView({behavior:'smooth',block:'start'}); },50); C.histOpen=!C.histOpen; render(); break;
     case 'undo': undo(); break;
     case 'mode': C.mode=d.m; persist(); render(); break;
     case 'tab': C.tab=d.t; render(); break;
