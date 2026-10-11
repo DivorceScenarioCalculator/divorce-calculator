@@ -1,0 +1,14 @@
+Copyright (c) 2026 Divorce Scenario Calculator. All rights reserved.
+
+This repository and the software in it, including its code, design, layout,
+text, and calculation methods, are proprietary and protected by copyright.
+
+No license is granted. Making this repository publicly viewable does not give
+anyone permission to copy, modify, redistribute, republish, host elsewhere,
+sell, or create derivative works from any part of it.
+
+The tool may be used free of charge only on its official website.
+
+Any other use requires prior written permission from the copyright owner.
+Unauthorized copying or hosting may be reported under the Digital Millennium
+Copyright Act (DMCA) and other applicable laws.

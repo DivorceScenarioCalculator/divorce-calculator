@@ -1,9 +1,19 @@
 <!DOCTYPE html>
+<!--
+  Divorce Scenario Calculator
+  Copyright (c) 2026 Divorce Scenario Calculator. All rights reserved.
+  This software, including its code, design, layout, text, and calculation methods, is proprietary.
+  No license is granted. You may use the tool only on its official website.
+  You may not copy, modify, redistribute, republish, host elsewhere, sell, or create derivative works
+  from any part of it without prior written permission from the copyright owner.
+  Unauthorized copying or hosting may be reported under the DMCA and other applicable laws.
+-->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Divorce Settlement Scenario Calculator</title>
+<meta name="copyright" content="Copyright (c) 2026 Divorce Scenario Calculator. All rights reserved.">
 <meta name="description" content="A free, private calculator for exploring divorce settlement scenarios. Everything stays in your browser.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%E2%9A%96%EF%B8%8F%3C/text%3E%3C/svg%3E">
 <style>
@@ -208,6 +218,42 @@
   .zcard.z2 .sec-h .nm{color:var(--ink)}
   .zcard.z1 .seg button.on,.zcard.z3 .seg button.on{background:var(--zc)}.zcard.z3 .seg{border-color:var(--line)}
   @media(max-width:600px){#scenhint{margin-left:0!important}.zcard{padding:12px 12px 14px}}
+  .goalbox{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin-top:8px}
+  .goalbox summary{cursor:pointer;color:var(--navy);font-size:13px}
+  .goalbody{padding-top:8px}.goalchk{display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:8px;font-size:12.5px}.goalchk label{display:flex;align-items:center;gap:5px;cursor:pointer}
+  .goalbody textarea,.argf textarea{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:7px;background:var(--card);color:var(--ink);font:inherit;font-size:12.5px;padding:6px 8px;resize:vertical}
+  .args{border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;background:var(--card);padding:6px 10px;margin:6px 0}
+  .args summary{cursor:pointer;font-weight:700;color:var(--accent);font-size:12.5px}
+  .argbody{display:flex;flex-direction:column;gap:8px;padding:8px 0 2px}
+  .arggroup{display:flex;flex-direction:column;gap:6px;padding:8px;border-radius:7px;background:var(--chip)}
+  .arggroup.counter{background:var(--contestbg)}
+  .argglbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
+  .argf{display:flex;flex-direction:column;gap:3px;font-size:11.5px;font-weight:700;color:var(--ink)}
+  .argf i{font-style:normal;color:var(--accent);font-weight:700}
+  .argf textarea,.goalbody textarea{font-weight:400}
+  .argf.pos textarea{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+  @media print{ .pargs td{font-size:9pt;color:#222;background:#fafafa;text-align:left!important;white-space:normal!important} .pargs div{margin:1pt 0} .pgoals{margin:2pt 0 6pt 16pt;font-size:10pt} }
+  .aibtn{border-color:var(--z4);color:var(--z4)}
+  .menupanel button .mi{display:block;font-size:11px;color:var(--muted);font-weight:400;margin-top:1px}
+  #aimenu .menupanel{min-width:280px}
+  .modal{display:none;position:fixed;inset:0;z-index:50;background:rgba(10,15,25,.45);align-items:flex-start;justify-content:center;padding:calc(env(safe-area-inset-top, 0px) + 30px) 12px 20px;overflow-y:auto}
+  .modal.open{display:flex}
+  .mbox{background:var(--card);color:var(--ink);border-radius:14px;max-width:640px;width:100%;padding:18px 18px 14px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+  .mbox h3{margin:0 0 8px;color:var(--navy);font-size:17px}
+  .msteps{margin:6px 0 10px;padding-left:20px;line-height:1.5;font-size:13px}.msteps li{margin:3px 0}
+  .mtext{width:100%;box-sizing:border-box;min-height:160px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;border:1px solid var(--line);border-radius:8px;padding:8px;background:var(--bg);color:var(--ink)}
+  .mbtns{display:flex;justify-content:flex-end;gap:8px;margin-top:12px;flex-wrap:wrap}
+  .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .aichanges{display:flex;flex-direction:column;gap:6px;max-height:55vh;overflow-y:auto;margin-top:6px}
+  .aich{display:flex;gap:9px;align-items:flex-start;border:1px solid var(--line);border-radius:9px;padding:8px 10px;cursor:pointer;font-size:12.5px}
+  .aich input{margin-top:3px;width:16px;height:16px;flex:0 0 auto}
+  .aich.bad{opacity:.6;cursor:default}.aich.conf{border-color:var(--amber);background:var(--contestbg)}
+  .aih{margin-bottom:2px}.aiv .old{color:var(--muted);text-decoration:line-through}.aiv .new{font-weight:700;color:var(--green)}
+  .aiwarn{color:var(--amber);font-weight:600;font-size:11.5px;margin-top:3px}.aiwhy{color:var(--muted);font-size:11.5px;margin-top:3px}
+  #toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom, 0px) + 18px);transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--card);padding:10px 16px;border-radius:10px;font-size:13px;max-width:90vw;opacity:0;pointer-events:none;transition:all .2s;z-index:60}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  @media(max-width:600px){.aibtn{font-size:11px;padding:6px 8px}}
+  @media print{.modal,#toast{display:none!important}}
 </style>
 </head>
 <body>
@@ -216,6 +262,14 @@
     <div class="titlebox"><h1>Divorce Scenario Calculator</h1>
     <p class="tag">A flexible, two-sided model for exploring divorce settlement scenarios in any U.S. state. Fill in your own numbers - every field is editable. Not legal or tax advice.</p></div>
     <div class="tools">
+      <div class="menu" id="aimenu">
+        <button type="button" class="btn menubtn aibtn" data-click="menu" aria-haspopup="true" aria-expanded="false">&#10022; Use your AI &#9662;</button>
+        <div class="menupanel" role="menu">
+          <button type="button" role="menuitem" data-click="aicopy"><b>1. Update with AI</b><span class="mi">Copies instructions + your current numbers to paste into your AI chat</span></button>
+          <button type="button" role="menuitem" data-click="aipaste"><b>2. Paste an AI update</b><span class="mi">Only needed if your AI gave you text instead of a link</span></button>
+          <div class="savehint">Works with ChatGPT, Claude, Gemini and others. Your documents go to your AI only; nothing is sent to this site. Leave out names and account numbers.</div>
+        </div>
+      </div>
       <div class="menu" id="filemenu">
         <button type="button" class="btn ghost menubtn" data-click="menu" aria-haspopup="true" aria-expanded="false">File &#9662;</button>
         <div class="menupanel" role="menu">
@@ -245,6 +299,8 @@
           <li><b>Open a section</b> (Accounts, House, Debts...) and tap a suggestion to add an item, or add your own.</li>
           <li><b>Type in the amounts.</b> Marital items are split 50/50 by default; change the "% you" on any item.</li>
           <li><b>Enter Low, Likely, and High amounts.</b> Likely is your best estimate. If you're unsure of a value, or you and your spouse disagree, also fill in Low and High; otherwise leave them blank and they match Likely. The Assumption buttons switch every item between the three; clicking a box tries it for one item, and <b>Lock</b> keeps that item at its amount no matter which Assumption button is on.</li>
+          <li><b>Add your arguments</b> (optional): for any item, explain why the Low, Likely, and High amounts apply, what the other side argues, and your response. Set your goals under Basic info. All of it prints with your summary.</li>
+          <li><b>Use your own AI</b> (optional): click <b>Use your AI</b> at the top right. Paste what it copies into ChatGPT, Claude or another AI, attach a new document, and click the link it returns. You approve every change before it applies.</li>
           <li><b>Read the results panel:</b> what each of you walks away with, how much is cash versus retirement or tied up, and the Deal Builder's suggested mix of assets.</li>
           <li><b>Save and compare versions</b> in the Scenarios section. Use the <b>File</b> menu at the top right to download a backup or print a summary for your attorney.</li>
         </ol>
@@ -264,13 +320,15 @@
       <p><b>What "saving" means.</b> Everything you type - including saved scenarios - stays in your own browser on your device. Nothing is uploaded, sent, or stored on any server. "Save current as a scenario" (in the Scenarios section) keeps a named version in that browser; <b>File &#9662;</b> at the top right has "Download backup," which saves a file you control and can re-import on any device, and "Clear / reset," which (like clearing your browser data) erases everything. <b>Best practice: download a backup after any important changes</b> so you always have a copy you trust.</p>
       <p class="warn"><b>Please work with a professional - this does not replace one.</b> This is an educational planning tool, <b>not legal, tax, or financial advice</b>, and not a substitute for an attorney, a forensic or financial professional, or an official state calculation. Divorce laws, alimony types and caps, child-support guidelines, imputed income, and tax treatment vary a great deal by state and change over time; any formulas or percentages you enter should come from your own state's rules or your attorney. The results are estimates based only on what you enter and on simplifying assumptions - they can be incomplete, out of date, or wrong, and the tool may contain errors. <b>Verify every figure with your own attorney and financial professionals. Use this only to understand scenarios and prepare better questions - never to make firm decisions, negotiate, or file anything.</b></p>
       <p class="warn"><b>No guarantee and no liability.</b> This tool is provided "as is." The creator makes no guarantee of accuracy, completeness, or fitness for any purpose, and accepts no liability for any decisions, losses, or outcomes arising from its use. By using it you accept full responsibility for checking all numbers with qualified professionals before relying on anything here.</p>
-      <label class="agree" id="agreebox"><input type="checkbox" id="agreecb" data-change="agree"><span><b>I have read the disclaimer above and I agree to these terms.</b> The calculator unlocks once this box is checked.</span></label>
+      <p class="warn"><b>Copyright and permitted use.</b> &copy; 2026 Divorce Scenario Calculator. All rights reserved. This tool, including its code, design, layout, text, and calculation methods, is protected by copyright. You may use it for free, for your own situation, on this website. You may not copy, download to republish, modify, redistribute, host elsewhere, sell, or build a product from any part of it without written permission. The numbers, notes, and arguments you enter are yours.</p>
+      <label class="agree" id="agreebox"><input type="checkbox" id="agreecb" data-change="agree"><span><b>I have read the disclaimer and copyright terms above and I agree to them.</b> The calculator unlocks once this box is checked.</span></label>
     </div>
   </details>
   <div class="app" id="app">
   <div id="appinner">
   <div class="caselbl">Basic info</div>
   <div class="case" id="case"></div>
+  <div id="goals"></div>
   <section class="zcard z1">
   <div class="zhead"><span class="znum">1</span><div><div class="ztitle">Assumptions</div><div class="zdesc">Pick which amounts to use: Low, Likely, or High. Every item switches together unless you lock it.</div></div></div>
   <div class="ctrls">
@@ -311,9 +369,11 @@
   <button type="button" class="lockov" id="lockov" data-click="locked" aria-label="Read the About section and agree to the terms to use the calculator"><span class="lockmsg">To use the calculator, please read <b>About this tool</b> above and check <b>"I have read the disclaimer and I agree"</b> at the bottom of it.</span></button>
   </div>
 </div>
+<div id="modal" class="modal"></div>
 <div id="printarea" aria-hidden="true"></div>
-<footer class="foot" id="foot">Divorce Scenario Calculator - last updated October 2026. Planning and education tool only, not legal or tax advice. Your entries stay in your browser. <a href="https://forms.gle/ZGRjXZDoP8otymmD7" target="_blank" rel="noopener">Send feedback</a></footer>
+<footer class="foot" id="foot"><b>&copy; 2026 Divorce Scenario Calculator. All rights reserved.</b> Copying, modifying, redistributing, or hosting this tool elsewhere without written permission is prohibited. Last updated October 2026. Planning and education tool only, not legal or tax advice. Your entries stay in your browser. <a href="https://forms.gle/ZGRjXZDoP8otymmD7" target="_blank" rel="noopener">Send feedback</a></footer>
 <script>
+/* Copyright (c) 2026 Divorce Scenario Calculator. All rights reserved. Proprietary code: copying, modification, redistribution or hosting elsewhere without written permission is prohibited. */
 const SECTIONS=[['accounts','Accounts & Retirement'],['house','House / Real Estate'],['business','Business'],['alimony','Alimony'],['addbacks','Add-backs, Fees & Reimbursements'],['debt','Debts'],['children','Child Support (monthly)'],['other','Other']];
 const ACCS=[['cash','Cash now','var(--green)'],['taxable','Taxable (sell)','var(--green)'],['qdro','QDRO penalty-free','var(--blue)'],['ira','IRA (penalty if early)','var(--amber)'],['realestate','Real estate','var(--amber)'],['illiquid','Illiquid / offset','var(--red)'],['hardcollect','Hard to collect','var(--red)'],['debt','Debt','var(--grey)'],['na','N/A','var(--grey)']];
 const TYPES=[['asset','Marital asset (split)'],['inflow','Transfer to you'],['debtYou','Your debt'],['debtSpouse',"Spouse's debt"],['sepYou','Separate property (yours)'],['sepSpouse',"Separate property (spouse's)"]];
@@ -363,6 +423,126 @@ const SCN={low:'Low',lk:'Likely',hi:'High'};
 function isLocked(r){ return !!(r&&r.locked&&SCN[r.pick]); }
 function lockTag(r){ return isLocked(r)?`<span class="cb lockt" title="Locked: this item stays at ${SCN[r.pick]} when you change the Assumption buttons">${LOCKI} Locked: ${SCN[r.pick]}</span>`:''; }
 function toggleLock(id){ const r=R(id); if(!r) return; if(isLocked(r)){ pushHistory('unlock '+dispName(r)); r.locked=false; r.pick=null; } else { pushHistory('lock '+dispName(r)); r.pick=col(r); r.locked=true; } persist(); render(); }
+
+const ARGF=[['low','Why Low','What supports the Low amount, and when it would apply'],['lk','Why Likely','Why this is the most realistic amount'],['hi','Why High','What supports the High amount, and when it would apply'],['their','Other side\'s position','Their number and their argument for it'],['reply','Your response','Why their argument is wrong or weaker'],['evidence','Evidence / sources','Documents, statements, or records that back this up']];
+const CHOICEQ={house:'Why keep or sell?',alimony:'Why this structure (lump sum, hybrid, or periodic)?'};
+function argCount(r){ const a=r.args||{}; return Object.keys(a).filter(k=>(a[k]||'').trim()).length; }
+function argsBtn(r){ if(noteOpen.has('arg:'+r.id)||argCount(r)) return ''; return `<button class="noteadd" data-click="argopen" data-id="${esc(r.id)}" title="Add your reasoning for Low, Likely and High, the other side's position, and your response">\uff0b Add arguments</button>`; }
+function argsHtml(r){ if(!(noteOpen.has('arg:'+r.id)||argCount(r))) return ''; const a=r.args||{}; const pos=isLocked(r)?r.pick:null;
+  let h=`<details class="args" ${noteOpen.has('argc:'+r.id)?'':'open'} data-argid="${esc(r.id)}"><summary><span>Arguments</span> <span class="hint">${argCount(r)} of ${ARGF.length+(CHOICEQ[r.type]?1:0)} filled${pos?` \u00b7 your position: <b>${SCN[pos]}</b>`:''}</span></summary><div class="argbody">`;
+  if(CHOICEQ[r.type]) h+=argField(r,'choice',CHOICEQ[r.type],'Your reasoning for this choice',false);
+  h+=`<div class="arggroup"><div class="argglbl">Your reasoning for each amount</div>`+ARGF.slice(0,3).map(f=>argField(r,f[0],f[1],f[2],pos===f[0])).join('')+`</div>`;
+  h+=`<div class="arggroup counter"><div class="argglbl">Counter-arguments</div>`+ARGF.slice(3,5).map(f=>argField(r,f[0],f[1],f[2],false)).join('')+`</div>`;
+  h+=argField(r,'evidence',ARGF[5][1],ARGF[5][2],false);
+  return h+`</div></details>`; }
+function argField(r,k,lbl,ph,isPos){ const v=(r.args||{})[k]||''; return `<label class="argf${isPos?' pos':''}"><span>${lbl}${isPos?' <i>(your position)</i>':''}</span><textarea rows="2" placeholder="${esc(ph)}" data-change="argset" data-id="${esc(r.id)}" data-k="${k}" data-argfield="${esc(r.id)}-${k}">${esc(v)}</textarea></label>`; }
+const GOALS=['Keep the home','Maximize cash now','Lump-sum support, no monthly payments','Protect retirement accounts','Minimize taxes','Clean break, no ongoing ties','Settle rather than go to trial'];
+function renderGoals(){ const el=document.getElementById('goals'); if(!el) return; const g=C.goals||{checks:[],text:''}; const n=(g.checks||[]).length+((g.text||'').trim()?1:0);
+  el.innerHTML=`<details class="goalbox" ${C.goalsOpen?'open':''}><summary><b>My goals &amp; concerns</b> <span class="hint">${n?n+' set':'optional - what matters most to you'}</span></summary><div class="goalbody"><div class="goalchk">`+
+   GOALS.map(t=>`<label><input type="checkbox" data-change="goalchk" data-v="${esc(t)}" ${(g.checks||[]).indexOf(t)>=0?'checked':''}> ${esc(t)}</label>`).join('')+
+   `</div><textarea rows="3" data-change="goaltext" placeholder="Other goals or concerns, in your own words (for example what you are most worried about, or what you would trade for what)">${esc(g.text||'')}</textarea><div class="hint">Your goals print at the top of the summary, above your figures and arguments.</div></div></details>`; }
+
+const AIF={
+ asset:['name','low','lk','hi','share','acc','type','inc','note'],
+ flow:['name','low','lk','hi','acc','type','inc','note'],
+ house:['name','aprLow','aprLk','aprHi','mortgage','share','decision','sellPct','sellFixed','taxLow','taxLk','taxHi','inc','note'],
+ alimony:['name','structure','amode','ratePct','spNetLow','spNetLk','spNetHi','youNet','need','durYrs','discPct','hybridLumpPct','low','lk','hi','inc','note'],
+ childsupport:['name','monthly','childcare','direction','kids','custodyPct','inc','note']
+};
+const ARGK=['low','lk','hi','their','reply','evidence','choice'];
+const NUMF=new Set(['share','sellPct','ratePct','durYrs','discPct','hybridLumpPct','kids','custodyPct']);
+const ENUMF={decision:['keep','sell'],structure:['lump','hybrid','periodic'],amode:['formula','manual'],direction:['receive','pay'],acc:ACCS.map(a=>a[0]),type:TYPES.map(t=>t[0])};
+const FLBL={name:'Name',low:'Low',lk:'Likely',hi:'High',share:'Your share %',acc:'Money type',type:'Item type',inc:'Included',note:'Note',aprLow:'Appraisal Low',aprLk:'Appraisal Likely',aprHi:'Appraisal High',mortgage:'Mortgage / owed',decision:'Keep or sell',sellPct:'Selling costs %',sellFixed:'Selling costs fixed',taxLow:'Tax on sale Low',taxLk:'Tax on sale Likely',taxHi:'Tax on sale High',structure:'Structure',amode:'Lump sum method',ratePct:'% of income difference',spNetLow:"Spouse's net $/mo Low",spNetLk:"Spouse's net $/mo Likely",spNetHi:"Spouse's net $/mo High",youNet:'Your net $/mo',need:'Your need $/mo',durYrs:'Duration (years)',discPct:'Discount %',hybridLumpPct:'Hybrid lump %',monthly:'Monthly support',childcare:'Child care / health $/mo',direction:'Receive or pay',kids:'Number of children',custodyPct:'Overnights %'};
+function aiKind(r){ return r.type==='house'?'house':r.type==='alimony'?'alimony':r.type==='childsupport'?'childsupport':r.type==='asset'?'asset':'flow'; }
+function aiSnapshot(){ return {tool:'divorce-scenario-calculator',format:1,rev:C.rev||0,assumption:scenName(),view:C.mode,
+  basicInfo:Object.fromEntries((C.case||[]).map(f=>[f[0],f[1]])),goals:C.goals||{checks:[],text:''},sectionNotes:C.secNotes||{},
+  items:C.rows.map(r=>{ const o={id:r.id,section:r.cat,kind:aiKind(r)}; AIF[aiKind(r)].forEach(f=>{ if(f==='name') o.name=dispName(r); else o[f]=r[f]==null?'':r[f]; }); o.args=Object.assign({},r.args||{}); return o; })}; }
+function aiPrompt(){ const base=location.href.split('#')[0];
+  return `You are helping me keep my Divorce Scenario Calculator up to date. It is a web page that runs on my device; you cannot see it, so I will paste its current data below. Please follow these rules for this whole chat.
+
+WHAT TO DO
+- When I give you documents (appraisals, statements, valuations, vocational reports, offers) or information, work out which calculator fields they affect and prepare an update.
+- Use only facts from my documents or messages. Never invent or estimate a number unless I ask you to, and say so if a document is unclear.
+- For each change, give a one-line reason and the source (document name, page or date).
+- Amount fields are plain numbers with no $ or commas, e.g. 1225000. Percent fields are numbers, e.g. 50.
+- Low / Likely / High: Likely is the most realistic figure; Low and High are optional (blank = same as Likely). Note that "high" is not always better for me, it is just the higher number.
+- You can also fill argument fields (args): low, lk, hi = why each amount applies; their = the other side's position; reply = my response; evidence = sources; choice = why keep/sell (home) or why this structure (alimony).
+- Never include names of people, account numbers, or case numbers in the update.
+
+HOW TO REPLY
+1. A short plain-language list of every change (field: old -> new, reason, source).
+2. A clickable link, exactly in this form:
+${base}#ai=<UPDATE>
+where <UPDATE> is the update JSON below, encoded with encodeURIComponent.
+3. Also put the same update JSON in a code block, so I can paste it if the link does not work.
+
+UPDATE JSON FORMAT
+{"format":1,"basedOn":<the rev number of the snapshot you used>,
+ "changes":[{"id":"<item id>","field":"<field name>","value":"<new value>","why":"...","source":"..."},
+            {"id":"<item id>","field":"args.hi","value":"<argument text>","why":"...","source":"..."}],
+ "add":[{"section":"<section>","kind":"<kind>","name":"...","fields":{"lk":"..."},"args":{"lk":"..."},"why":"...","source":"..."}]}
+Only include fields that change. Use "add" only for something not already in the calculator.
+Sections: ${SECTIONS.map(x=>x[0]+' ('+x[1]+')').join(', ')}.
+Kinds and their fields:
+- asset (an asset to split): ${AIF.asset.join(', ')}. acc is one of ${ENUMF.acc.join(', ')}. type is one of ${ENUMF.type.join(', ')} (sepYou / sepSpouse = separate, non-marital property).
+- flow (debt, payment to me, separate property): ${AIF.flow.join(', ')}.
+- house: ${AIF.house.join(', ')}. decision is keep or sell.
+- alimony: ${AIF.alimony.join(', ')}. structure is lump, hybrid or periodic; amode is formula or manual (manual uses low/lk/hi as the lump sum).
+- childsupport: ${AIF.childsupport.join(', ')}. direction is receive or pay.
+
+COPYRIGHT\n- This calculator is copyrighted (c) 2026 Divorce Scenario Calculator. Only prepare updates for it; do not reproduce, rebuild, or recreate the calculator or its code.\n\nKEEPING IN SYNC
+- Always base updates on the most recent snapshot I have pasted in this chat, and put its rev number in "basedOn".
+- If I tell you I changed things in the calculator myself, ask me to click "Update with AI" again and paste the fresh snapshot before you prepare the next update.
+
+CURRENT CALCULATOR DATA (rev ${C.rev||0}):
+${JSON.stringify(aiSnapshot())}
+
+Reply "Ready" and briefly list what is in my calculator, then wait for my documents.`; }
+function openModal(html){ const m=document.getElementById('modal'); m.innerHTML=`<div class="mbox" role="dialog" aria-modal="true">${html}</div>`; m.classList.add('open'); const f=m.querySelector('button.primary,textarea,button'); if(f) f.focus(); }
+function closeModal(){ const m=document.getElementById('modal'); if(m){ m.classList.remove('open'); m.innerHTML=''; } }
+async function aiCopy(){ const txt=aiPrompt(); let ok=false; try{ await navigator.clipboard.writeText(txt); ok=true; }catch(e){}
+  openModal(`<h3>${ok?'\u2713 Copied for your AI':'Copy this for your AI'}</h3>
+   <ol class="msteps"><li>Open your AI (ChatGPT, Claude, Gemini...), in a new chat or the chat you already use for this.</li><li>Paste${ok?'':' the text below'}.</li><li>Attach your new document (appraisal, statement, valuation...) or describe the change.</li><li>Click the <b>Apply</b> link your AI gives you. This page opens and shows every change for you to approve.</li></ol>
+   ${ok?'':`<textarea class="mtext" readonly>${esc(txt)}</textarea>`}
+   <p class="hint">This copy includes your current numbers (rev ${C.rev||0}), so your AI always works from your latest version. Repeat this step whenever you have edited the calculator yourself. Before sharing documents from your attorney with any AI service, ask your attorney whether that could affect privilege.</p>
+   <div class="mbtns">${ok?'<button class="btn ghost" data-click="aishowtext">Show the copied text</button>':''}<button class="btn primary" data-click="mclose">Done</button></div>`);
+  window.__aitext=txt; }
+function aiPasteBox(){ openModal(`<h3>Paste an AI update</h3><p class="hint">Paste the update your AI gave you (the code block, or the whole link).</p><textarea class="mtext" id="aipastebox" placeholder='{"format":1,"basedOn":...,"changes":[...]}'></textarea><div class="mbtns"><button class="btn ghost" data-click="mclose">Cancel</button><button class="btn primary" data-click="aipastego">Preview changes</button></div>`); }
+function parseAIUpdate(t){ t=String(t||'').trim(); const m=t.match(/#ai=([^\s)"'<>]+)/); if(m){ try{ t=decodeURIComponent(m[1]); }catch(e){ throw new Error('The link looks incomplete. Paste the code block instead.'); } }
+  const a=t.indexOf('{'), b=t.lastIndexOf('}'); if(a<0||b<a) throw new Error('No update found. Paste the code block your AI gave you.');
+  let u; try{ u=JSON.parse(t.slice(a,b+1)); }catch(e){ throw new Error('The update is not complete or not valid. Ask your AI to resend the code block.'); }
+  if(!u||(!Array.isArray(u.changes)&&!Array.isArray(u.add))) throw new Error('This does not look like an update for this calculator.'); return u; }
+function aiClean(kind,f,v){ if(f==='inc') return !(v===false||v==='false'||v===0||v==='0'); if(f==='name'||f==='note') return String(v==null?'':v).slice(0,300);
+  if(ENUMF[f]){ v=String(v); if(ENUMF[f].indexOf(v)<0) throw new Error('not an allowed value'); return v; }
+  if(MONEYF.has(f)||NUMF.has(f)){ const c=cleanNum(v); if(String(v).trim()!==''&&c==='') throw new Error('not a number'); return c; } throw new Error('unknown field'); }
+let aiPending=null;
+function aiPreview(u){ const based=+u.basedOn||0; const rows=[]; (u.changes||[]).forEach((c,i)=>{ const r=R(c.id); let item={i,c,ok:true}; if(!r){ item.ok=false; item.err='item not found in your calculator'; rows.push(item); return; }
+   const f=String(c.field||''); item.r=r; try{ if(f.indexOf('args.')===0){ const k=f.slice(5); if(ARGK.indexOf(k)<0) throw new Error('unknown argument field'); item.val=String(c.value==null?'':c.value).slice(0,4000); item.old=(r.args||{})[k]||''; item.lbl='Argument: '+({low:'Why Low',lk:'Why Likely',hi:'Why High',their:"Other side's position",reply:'Your response',evidence:'Evidence',choice:'Choice'})[k]; }
+     else { if(AIF[aiKind(r)].indexOf(f)<0) throw new Error('not a field of this item'); item.val=aiClean(aiKind(r),f,c.value); item.old=r[f]; item.lbl=FLBL[f]||f; item.money=MONEYF.has(f); }
+     const mk=(C.mod||{})[r.id+'.'+f]; if(mk&&mk.by==='user'&&mk.r>based) item.conflict=true; }catch(e){ item.ok=false; item.err=e.message; } rows.push(item); });
+  const adds=(u.add||[]).map((a,i)=>{ const it={i,a,ok:true}; if(!SECTIONS.some(x=>x[0]===a.section)) { it.ok=false; it.err='unknown section'; } if(!AIF[a.kind]){ it.ok=false; it.err='unknown kind'; } return it; });
+  aiPending={u,rows,adds};
+  const fv=(it,v)=>it.money?(v===''||v==null?'blank':fmt(+v)):(v===''||v==null?'blank':esc(String(v)));
+  let h=`<h3>Review your AI's changes</h3><p class="hint">Nothing changes until you click Apply. Uncheck anything you don't want.</p><div class="aichanges">`;
+  rows.forEach(it=>{ const name=it.r?esc(dispName(it.r)):'?'; h+=`<label class="aich ${it.ok?'':'bad'} ${it.conflict?'conf':''}"><input type="checkbox" data-aich="${it.i}" ${it.ok&&!it.conflict?'checked':''} ${it.ok?'':'disabled'}><div><div class="aih"><b>${name}</b> \u00b7 ${esc(it.lbl||it.c.field||'')}</div>`+
+    (it.ok?`<div class="aiv"><span class="old">${fv(it,it.old)}</span> \u2192 <span class="new">${fv(it,it.val)}</span></div>`:`<div class="aiv">Skipped: ${esc(it.err)}</div>`)+
+    (it.conflict?`<div class="aiwarn">\u26a0 You changed this yourself after sending your numbers to the AI. Check it only if you want the AI's value instead of yours.</div>`:'')+
+    ((it.c.why||it.c.source)?`<div class="aiwhy">${it.c.why?esc(it.c.why):''}${it.c.source?` <i>Source: ${esc(it.c.source)}</i>`:''}</div>`:'')+`</div></label>`; });
+  adds.forEach(it=>{ const a=it.a; h+=`<label class="aich ${it.ok?'':'bad'}"><input type="checkbox" data-aiadd="${it.i}" ${it.ok?'checked':''} ${it.ok?'':'disabled'}><div><div class="aih"><b>New item:</b> ${esc(a.name||'New item')} \u00b7 ${esc((SECTIONS.find(x=>x[0]===a.section)||['',a.section])[1])}</div>`+(it.ok?'':`<div class="aiv">Skipped: ${esc(it.err)}</div>`)+((a.why||a.source)?`<div class="aiwhy">${a.why?esc(a.why):''}${a.source?` <i>Source: ${esc(a.source)}</i>`:''}</div>`:'')+`</div></label>`; });
+  if(!rows.length&&!adds.length) h+='<p>No changes in this update.</p>';
+  h+=`</div><div class="mbtns"><button class="btn ghost" data-click="mclose">Cancel</button><button class="btn primary" data-click="aiapply">Apply selected</button></div>`; openModal(h); }
+function aiApply(){ if(!aiPending) return; const m=document.getElementById('modal'); pushHistory('AI update'); let n=0;
+  aiPending.rows.forEach(it=>{ const cb=m.querySelector(`[data-aich="${it.i}"]`); if(!it.ok||!cb||!cb.checked) return; const f=String(it.c.field);
+    if(f.indexOf('args.')===0){ it.r.args=it.r.args||{}; it.r.args[f.slice(5)]=it.val; } else it.r[f]=it.val; markMod(it.r.id,f,'ai'); n++; });
+  aiPending.adds.forEach(it=>{ const cb=m.querySelector(`[data-aiadd="${it.i}"]`); if(!it.ok||!cb||!cb.checked) return; const a=it.a, sec=a.section, k=a.kind;
+    const flds=a.fields||{}; let r=k==='house'?nHouse(''):k==='alimony'?nAlim(''):k==='childsupport'?nChild(''):k==='asset'?nAsset(sec,'',flds.acc&&ENUMF.acc.indexOf(flds.acc)>=0?flds.acc:'cash'):nFlow(sec,'',flds.type&&ENUMF.type.indexOf(flds.type)>=0?flds.type:'debtYou',flds.acc&&ENUMF.acc.indexOf(flds.acc)>=0?flds.acc:'na');
+    r.cat=sec; r.name=String(a.name||'').slice(0,300); Object.keys(flds).forEach(f=>{ if(AIF[k].indexOf(f)>=0&&f!=='name'){ try{ r[f]=aiClean(k,f,flds[f]); }catch(e){} } });
+    if(a.args&&typeof a.args==='object'){ r.args={}; ARGK.forEach(x=>{ if(a.args[x]) r.args[x]=String(a.args[x]).slice(0,4000); }); }
+    C.rows.push(r); C.exp[sec]=true; n++; });
+  aiPending=null; closeModal(); persist(); render(); toast(n?`\u2713 Applied ${n} change${n!==1?'s':''} from your AI. Undo is in File \u25be > History.`:'No changes applied.'); }
+function toast(t){ let el=document.getElementById('toast'); if(!el){ el=document.createElement('div'); el.id='toast'; el.setAttribute('role','status'); document.body.appendChild(el); } el.textContent=t; el.classList.add('show'); clearTimeout(window.__tt); window.__tt=setTimeout(()=>el.classList.remove('show'),5000); }
+function aiFromHash(){ const h=location.hash||''; if(h.indexOf('#ai=')!==0) return null; let u=null; try{ u=parseAIUpdate(h); }catch(e){ u={__err:e.message}; } try{ history.replaceState(null,'',location.href.split('#')[0]); }catch(e){} return u; }
+let aiFromLink=null;
 function sepTag(r){ if(!isSep(r)) return ''; return `<span class="cb sep" title="Separate (non-marital) property is not split. It counts only in the Total wealth view.">Separate${r.type==='sepYou'?' - yours':" - spouse's"}${C.mode==='division'?' (Total wealth only)':''}</span>`; }
 function delBtn(r){ return `<button class="mini del" data-click="del" data-id="${esc(r.id)}">\u2715 remove</button>`; }
 const LS='divorce_calc_public_v1'; let C,st; const pEdit=new Set(); const liqExp=new Set();
@@ -371,7 +551,8 @@ function stripNames(cs){ return Array.isArray(cs)?cs.filter(f=>Array.isArray(f)&
 function migrate(){ if(Array.isArray(C.rows)){ C.rows=C.rows.filter(r=>!(r&&r.cat==='nonmarital'&&!['low','lk','hi','total'].some(k=>r[k]!==''&&r[k]!=null&&+r[k]!==0)&&!r.note)); C.rows.forEach(r=>{ if(r&&r.cat==='nonmarital') r.cat='other'; }); } if(C.exp) delete C.exp.nonmarital; if(C.secNotes&&C.secNotes.nonmarital){ C.secNotes.other=((C.secNotes.other||'')+(C.secNotes.other?'\n':'')+C.secNotes.nonmarital); delete C.secNotes.nonmarital; } (C.rows||[]).forEach(r=>{ if(r&&r.type==='asset'&&(r.lk===''||r.lk==null)&&r.total!==''&&r.total!=null&&+r.total!==0){ r.lk=r.total; if(!r.contested){ r.low=''; r.hi=''; } } }); C.case=stripNames(C.case); (C.scenarios||[]).forEach(x=>{ if(x&&x.cfg&&x.cfg.case) x.cfg.case=stripNames(x.cfg.case); }); if(Array.isArray(C._undo)) C._undo.forEach(e=>{ try{ const o=JSON.parse(e.snap); if(o.case){ o.case=stripNames(o.case); e.snap=JSON.stringify(o); } }catch(x){} }); if(Array.isArray(C.case)){ const mc=C.case.find(f=>f[0]==='Minor children'); if(mc){ const cs=(C.rows||[]).find(r=>r.type==='childsupport'); if(cs&&!(+cs.kids)&&+mc[1]) cs.kids=+mc[1]; C.case=C.case.filter(f=>f[0]!=='Minor children'); } } fixRows(C.rows); (C.scenarios||[]).forEach(x=>{ if(x&&x.cfg) fixRows(x.cfg.rows); }); if(Array.isArray(C._undo)) C._undo.forEach(e=>{ if(e&&typeof e.snap==='string'&&!/spNet/.test(e.snap)){ try{ const o=JSON.parse(e.snap); fixRows(o.rows); e.snap=JSON.stringify(o); }catch(x){} } }); if(!C.exp)C.exp={}; if(!C.mode)C.mode='division'; if(!C.tab)C.tab='you'; if(!C.dealPriority)C.dealPriority='secure'; if(!Array.isArray(C.scenarios))C.scenarios=[]; if(!C.secNotes)C.secNotes={}; if(!C.editSec)C.editSec={}; if(C.compareMode==null)C.compareMode=false; if(C.histOpen==null)C.histOpen=false; if(Array.isArray(C.scenarios))C.scenarios.forEach((x,i)=>{ if(!x||typeof x!=='object'){C.scenarios[i]={name:'Scenario '+(i+1),cfg:{}};} else if(!x.name||typeof x.name!=='string'||!x.name.trim()) x.name='Scenario '+(i+1); }); const _a=C.rows&&C.rows.find(r=>r.type==='alimony'); if(_a&&_a.ratePct==null)_a.ratePct=0; const hr=C.rows&&C.rows.find(r=>r.type==='house'); if(hr&&!hr.decision)hr.decision='keep'; }
 function loadLS(){ try{ const raw=localStorage.getItem(LS); if(raw){ C=JSON.parse(raw); migrate(); return; } }catch(e){} C=D(); migrate(); }
 function saveLS(){ try{ localStorage.setItem(LS,JSON.stringify(C)); }catch(e){} }
-function persist(){ flash(); saveLS(); }
+function persist(){ C.rev=(C.rev||0)+1; flash(); saveLS(); }
+function markMod(id,f,by){ C.mod=C.mod||{}; C.mod[id+'.'+f]={r:(C.rev||0)+1,by:by||'user'}; }
 function flash(){ const el=document.getElementById('saved'); if(el){ el.textContent='✓ saved'; clearTimeout(st); st=setTimeout(()=>el.textContent='',1000);} }
 function fmt(n){ const s=n<0?'-':''; return s+'$'+Math.abs(Math.round(n||0)).toLocaleString('en-US'); }
 function esc(s){ return (s==null?'':s).toString().replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
@@ -430,7 +611,7 @@ function scenName(){ return {low:'Low',lk:'Likely',hi:'High'}[C.scen]; }
 
 function render(){
   renderCase(); renderBody(); }
-function renderCase(){
+function renderCase(){ renderGoals();
   const cw=document.getElementById('case'); cw.innerHTML='';
   C.case.forEach((f,i)=>{ const d=document.createElement('div'); d.className='f'; const dt=/date/i.test(f[0]); d.innerHTML=`<label>${esc(f[0])}</label><input type="${esc(dt?'date':'text')}" value="${esc(f[1])}" data-change="case" data-i="${esc(i)}"${dt?' min="1900-01-01" max="2100-12-31"':' placeholder="e.g. your state"'}>`; cw.appendChild(d); });
   const d=document.createElement('div'); d.className='f'; d.id='mlenbox'; d.innerHTML=`<label>Marriage length (calculated)</label><input type="text" id="mlen" disabled style="font-weight:700;color:var(--navy)">`; cw.appendChild(d); updateMarriage(); }
@@ -504,7 +685,7 @@ function houseHtml(r,collapsed){
     h+=`<div class="r tot"><span>Your ${+r.share||0}% of proceeds</span><b>${fmt(youShare(r))}</b></div>`;
   }
   h+=`</div>`;
-  if(!collapsed){ h+=`<div class="itop" style="margin-top:5px">${noteBtn(r)}${delBtn(r)}</div>`; if(r.ex) h+=`<div class="exnote"><b>Note:</b> ${esc(r.ex)}</div>`; h+=noteHtml(r); }
+  if(!collapsed){ h+=`<div class="itop" style="margin-top:5px">${argsBtn(r)}${noteBtn(r)}${delBtn(r)}</div>`; if(r.ex) h+=`<div class="exnote"><b>Note:</b> ${esc(r.ex)}</div>`; h+=argsHtml(r)+noteHtml(r); }
   h+=`</div>`; return h;
 }
 function alimHtml(r,collapsed){
@@ -532,8 +713,8 @@ function alimHtml(r,collapsed){
   if(oblig>0){ h+=`<div class="r"><span>Plus monthly support (not in division)</span><b>${fmt(oblig)}/mo for ${(+r.durYrs||0)} yr</b></div><div style="font-size:11px;color:var(--red);margin-top:3px">\u26a0 Monthly payments depend on the payer continuing to pay; an up-front lump sum does not.</div>`; }
   h+=`</div>`;
   if(!collapsed){ h+=`<div class="exnote"><b>Alimony rules vary by state - research yours.</b> States weigh things like the length of the marriage, each spouse's need and ability to pay, and the standard of living. Some use a formula based on the difference in net incomes and limit how long payments last; some allow permanent alimony and others do not. Enter the %, duration, and type that fit your state, or the figures from your attorney. <a href="${esc(researchLink('alimony law duration cap types'))}" target="_blank" style="color:var(--accent);font-weight:700">Research your state &rarr;</a></div>`;
-    h+=`<div class="itop" style="margin-top:5px">${noteBtn(r)}${delBtn(r)}</div>`;
-    h+=noteHtml(r); }
+    h+=`<div class="itop" style="margin-top:5px">${argsBtn(r)}${noteBtn(r)}${delBtn(r)}</div>`;
+    h+=argsHtml(r)+noteHtml(r); }
   h+=`</div>`; return h;
 }
 function childSupportHtml(r,collapsed){
@@ -564,9 +745,9 @@ function itemHtml(r,collapsed){
     h+=`<div class="itop" style="margin-top:5px">`;
     h+=`<select data-change="upd" data-id="${esc(r.id)}" data-f="acc" style="max-width:150px">${ACCS.map(a=>`<option value="${esc(a[0])}" ${r.acc===a[0]?'selected':''}>${a[1]}</option>`).join('')}</select>`;
     h+=`<select data-change="upd" data-id="${esc(r.id)}" data-f="type" style="max-width:210px">${TYPES.map(t=>`<option value="${esc(t[0])}" ${r.type===t[0]?'selected':''}>${t[1]}</option>`).join('')}</select>`;
-    h+=noteBtn(r)+delBtn(r)+`</div>`;
+    h+=argsBtn(r)+noteBtn(r)+delBtn(r)+`</div>`;
     if(r.ex) h+=`<div class="exnote"><b>Note:</b> ${esc(r.ex)}</div>`;
-    h+=noteHtml(r);
+    h+=argsHtml(r)+noteHtml(r);
   }
   h+=`</div>`; return h;
 }
@@ -601,6 +782,7 @@ function printSummary(){
   let h=`<h1>Divorce Scenario Summary</h1><p class="pmeta">Prepared ${esc(dt)} with the Divorce Scenario Calculator. A planning estimate based only on the figures entered. Not legal, tax, or financial advice.</p>`;
   const ci=C.case.filter(f=>f[1]!==''&&f[1]!=null); const my=marriageYears();
   if(ci.length||my){ h+='<table class="pt"><tbody>'; ci.forEach(f=> h+=`<tr><th>${esc(f[0])}</th><td>${esc(f[1])}</td></tr>`); if(my) h+=`<tr><th>Marriage length</th><td>${my.toFixed(1)} years</td></tr>`; h+='</tbody></table>'; }
+  { const g=C.goals||{}; const gc=(g.checks||[]), gt=(g.text||'').trim(); if(gc.length||gt){ h+=`<h2>My goals &amp; concerns</h2>`; if(gc.length) h+='<ul class="pgoals">'+gc.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>'; if(gt) h+=`<p class="pnote">${esc(gt)}</p>`; } }
   h+=`<p class="pmeta">Amounts used: <b>${esc(scenName())}</b>. View: <b>${C.mode==='wealth'?'Total wealth (includes separate property)':'Division only'}</b>.</p>`;
   h+=`<table class="pt ptot"><tbody><tr><th>You get</th><td>${fmt(you)}</td></tr><tr><th>Your spouse gets</th><td>${fmt(sp)}</td></tr><tr><th>Combined</th><td>${fmt(you+sp)}</td></tr>`;
   if(oblig>0) h+=`<tr><th>Plus monthly alimony (not in totals)</th><td>${fmt(oblig)}/mo</td></tr>`;
@@ -611,9 +793,9 @@ function printSummary(){
     rows.forEach(r=>{ const tags=[]; if(isLocked(r)) tags.push('locked at '+SCN[r.pick]); else if(hasRange(r)) tags.push('has Low / High range'); if(!counts(r)) tags.push(r.inc?'not in this view':'excluded'); if(r.type==='house') tags.push(r.decision==='sell'?'sell':'keep and buy out');
       if(r.type==='alimony') tags.push(r.structure||'lump');
       const mo=(r.type==='childsupport');
-      h+=`<tr><td>${esc(dispName(r))}${tags.length?` <span class="ptag">(${esc(tags.join(', '))})</span>`:''}${r.note?`<div class="pnote">${esc(r.note)}</div>`:''}</td><td>${fmt(rowValue(r))}${mo?'/mo':''}</td><td>${mo?(fmt(youShare(r))+'/mo'):fmt(youShare(r))}</td><td>${mo?'':fmt(spShare(r))}</td></tr>`; });
+      h+=`<tr><td>${esc(dispName(r))}${tags.length?` <span class="ptag">(${esc(tags.join(', '))})</span>`:''}${r.note?`<div class="pnote">${esc(r.note)}</div>`:''}</td><td>${fmt(rowValue(r))}${mo?'/mo':''}</td><td>${mo?(fmt(youShare(r))+'/mo'):fmt(youShare(r))}</td><td>${mo?'':fmt(spShare(r))}</td></tr>`; if(argCount(r)){ const a=r.args||{}; const items=[]; if(a.choice) items.push(['Choice',a.choice]); [['low','Why Low'],['lk','Why Likely'],['hi','Why High']].forEach(([k,l])=>{ if(a[k]) items.push([l+(isLocked(r)&&r.pick===k?' (my position)':''),a[k]]); }); if(a.their) items.push(["Other side's position",a.their]); if(a.reply) items.push(['My response',a.reply]); if(a.evidence) items.push(['Evidence',a.evidence]); h+=`<tr class="pargs"><td colspan="4">`+items.map(([l,v])=>`<div><b>${esc(l)}:</b> ${esc(v)}</div>`).join('')+`</td></tr>`; } });
     h+='</tbody></table>'; if(C.secNotes&&C.secNotes[key]) h+=`<p class="pnote"><b>Notes:</b> ${esc(C.secNotes[key])}</p>`; });
-  h+=`<p class="pdisc">This summary is an educational planning estimate, not legal, tax, or financial advice, and not an official state calculation. Results depend entirely on the figures entered and on simplifying assumptions, and may be incomplete or wrong. Verify every figure with your attorney and financial professionals.</p>`;
+  h+=`<p class="pdisc">Created with the Divorce Scenario Calculator (${esc(location.href.split("#")[0])}). &copy; 2026 Divorce Scenario Calculator. All rights reserved. This summary is an educational planning estimate, not legal, tax, or financial advice, and not an official state calculation. Results depend entirely on the figures entered and on simplifying assumptions, and may be incomplete or wrong. Verify every figure with your attorney and financial professionals.</p>`;
   pa.innerHTML=h; window.print();
 }
 function renderSaved(){
@@ -758,7 +940,7 @@ function cleanNum(t){ t=String(t==null?'':t).trim(); const neg=/^-|^\(.*\)$/.tes
 function enhanceInputs(root){ (root||document).querySelectorAll('input[type=number]').forEach(el=>{ const d=el.dataset; const money=(d.change==='upd'&&MONEYF.has(d.f))||(d.change==='adjset'&&d.f==='amt')||(d.change==='pset'&&d.f==='value');
   el.type='text'; el.inputMode='decimal'; el.autocomplete='off'; d.num=money?'money':'num';
   if(money){ el.value=fmtMoneyIn(el.value); el.placeholder=el.placeholder?fmtMoneyIn(el.placeholder):'$0'; } else if(!el.placeholder) el.placeholder='0'; }); }
-function upd(id,f,v){ const r=R(id); if(!r)return; const old=r[f]; pushHistory(dispName(r)+': '+f+' '+(typeof old==='number'?fmt(old):old)+' \u2192 '+(typeof v==='string'&&/^-?\d/.test(v)?fmt(+v):v)); r[f]=v; persist(); render(); }
+function upd(id,f,v){ const r=R(id); if(!r)return; markMod(id,f,'user'); const old=r[f]; pushHistory(dispName(r)+': '+f+' '+(typeof old==='number'?fmt(old):old)+' \u2192 '+(typeof v==='string'&&/^-?\d/.test(v)?fmt(+v):v)); r[f]=v; persist(); render(); }
 function pickCol(id,k){ const r=R(id); if(!r)return; if(r.locked){ r.pick=k; } else { r.pick=(r.pick===k)?null:k; } persist(); render(); }
 function papply(id,v){ const r=R(id); if(!r)return; if(r.type==='house') r['apr'+SK[col(r)]]=v; else r[col(r)]=v; persist(); render(); }
 function pset(id,i,f,v){ R(id).presets[i][f]= f==='value'?(+v||0):v; persist(); render(); }
@@ -779,12 +961,18 @@ function toggleTheme(){ const r=document.documentElement; const cur=r.getAttribu
 
 document.addEventListener('click',function(e){
   if(['INPUT','SELECT','TEXTAREA'].indexOf(e.target.tagName)>=0) return;
-  const fm=document.getElementById('filemenu'); if(fm&&fm.classList.contains('open')&&!e.target.closest('.menubtn')){ fm.classList.remove('open'); const mb=fm.querySelector('.menubtn'); if(mb) mb.setAttribute('aria-expanded','false'); }
+  document.querySelectorAll('.menu.open').forEach(m=>{ if(!e.target.closest('.menubtn')||e.target.closest('.menu')!==m){ m.classList.remove('open'); const mb=m.querySelector('.menubtn'); if(mb) mb.setAttribute('aria-expanded','false'); } });
   const el=e.target.closest('[data-click]'); if(!el) return; const d=el.dataset;
-  if(!isAgreed() && ['export','impclick','print','togglehist','undo','reset'].indexOf(d.click)>=0){ showAgree(); return; }
+  if(!isAgreed() && ['export','impclick','print','togglehist','undo','reset','aicopy','aipaste'].indexOf(d.click)>=0){ showAgree(); return; }
   switch(d.click){
     case 'theme': toggleTheme(); break;
-    case 'menu': { const m=document.getElementById('filemenu'); const open=!m.classList.contains('open'); m.classList.toggle('open',open); el.setAttribute('aria-expanded',open?'true':'false'); return; }
+    case 'aicopy': aiCopy(); break;
+    case 'aipaste': aiPasteBox(); break;
+    case 'aishowtext': openModal(`<h3>Text copied for your AI</h3><textarea class="mtext" readonly>${esc(window.__aitext||'')}</textarea><div class="mbtns"><button class="btn primary" data-click="mclose">Close</button></div>`); break;
+    case 'aipastego': { try{ aiPreview(parseAIUpdate(document.getElementById('aipastebox').value)); }catch(err){ toast(err.message); } break; }
+    case 'aiapply': aiApply(); break;
+    case 'mclose': aiPending=null; closeModal(); break;
+    case 'menu': { const m=el.closest('.menu'); const open=!m.classList.contains('open'); m.classList.toggle('open',open); el.setAttribute('aria-expanded',open?'true':'false'); return; }
     case 'locked': showAgree(); break;
     case 'export': exportJSON(); break;
     case 'print': printSummary(); break;
@@ -820,11 +1008,13 @@ document.addEventListener('click',function(e){
     case 'del': delRow(d.id); break;
     case 'add': addRow(d.k,d.i==null?-1:+d.i); break;
     case 'noteopen': noteOpen.add(d.id); render(); { const el=document.querySelector(`[data-noteid="${d.id}"]`); if(el) el.focus(); } break;
+    case 'argopen': noteOpen.add('arg:'+d.id); render(); { const el=document.querySelector(`[data-argfield="${d.id}-lk"]`)||document.querySelector(`[data-argfield^="${d.id}-"]`); if(el) el.focus(); } break;
     case 'secnoteopen': noteOpen.add('sec:'+d.k); render(); { const el=document.querySelector(`[data-secnote="${d.k}"]`); if(el) el.focus(); } break;
   }
 });
-document.addEventListener('focusin',function(e){ const el=e.target; if(el&&el.dataset&&el.dataset.num&&el.select) setTimeout(()=>{ try{ el.select(); }catch(x){} },0); });
-document.addEventListener('keydown',function(e){ if(e.key==='Escape'){ const fm=document.getElementById('filemenu'); if(fm) fm.classList.remove('open'); } });
+document.addEventListener('toggle',function(e){ const t=e.target; if(!t||!t.classList) return; if(t.classList.contains('args')){ const id=t.dataset.argid; if(t.open) noteOpen.delete('argc:'+id); else noteOpen.add('argc:'+id); } if(t.classList.contains('goalbox')) C.goalsOpen=t.open; },true);
+document.addEventListener('focusin',function(e){ const el=e.target; if(el&&el.dataset&&el.dataset.num&&el.select){ const v0=el.value; setTimeout(()=>{ try{ if(document.activeElement===el&&el.value===v0) el.select(); }catch(x){} },0); } });
+document.addEventListener('keydown',function(e){ if(e.key==='Escape'){ document.querySelectorAll('.menu.open').forEach(m=>m.classList.remove('open')); closeModal(); } });
 document.addEventListener('keydown',function(e){ if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('.sec-h[role=button]')){ e.preventDefault(); e.target.click(); } });
 document.addEventListener('change',function(e){
   const el=e.target, d=el.dataset; if(!d||!d.change) return;
@@ -839,6 +1029,9 @@ document.addEventListener('change',function(e){
     case 'renamescen': renameScenario(+d.i,v); break;
     case 'import': importFile(el); break;
     case 'agree': setAgreed(el.checked); break;
+    case 'argset': { const r=R(d.id); if(r){ markMod(d.id,'args.'+d.k,'user'); r.args=r.args||{}; r.args[d.k]=el.value; persist(); render(); } break; }
+    case 'goalchk': { C.goals=C.goals||{checks:[],text:''}; const a=C.goals.checks||(C.goals.checks=[]); const i=a.indexOf(d.v); if(el.checked&&i<0)a.push(d.v); if(!el.checked&&i>=0)a.splice(i,1); C.goalsOpen=true; persist(); renderGoals(); break; }
+    case 'goaltext': { C.goals=C.goals||{checks:[],text:''}; C.goals.text=el.value; C.goalsOpen=true; persist(); renderGoals(); break; }
   }
 });
 
@@ -846,9 +1039,12 @@ const AGREE='divorce_calc_agree_v1';
 function isAgreed(){ try{ return localStorage.getItem(AGREE)==='1'; }catch(e){ return false; } }
 function applyLock(){ const ok=isAgreed(); const app=document.getElementById('app'), inner=document.getElementById('appinner'), cb=document.getElementById('agreecb');
   if(cb) cb.checked=ok; if(app) app.classList.toggle('locked',!ok); if(inner){ inner.inert=!ok; if(!ok) inner.setAttribute('aria-hidden','true'); else inner.removeAttribute('aria-hidden'); } }
-function setAgreed(v){ try{ if(v) localStorage.setItem(AGREE,'1'); else localStorage.removeItem(AGREE); }catch(e){} applyLock(); }
+function setAgreed(v){ try{ if(v) localStorage.setItem(AGREE,'1'); else localStorage.removeItem(AGREE); }catch(e){} applyLock(); if(v&&typeof aiLinkGo==='function') aiLinkGo(); }
 function showAgree(){ const d=document.getElementById('intro'), box=document.getElementById('agreebox'); if(d) d.open=true; if(box){ box.scrollIntoView({behavior:'smooth',block:'center'}); box.classList.remove('flash'); void box.offsetWidth; box.classList.add('flash'); const cb=document.getElementById('agreecb'); if(cb) setTimeout(()=>cb.focus({preventScroll:true}),400); } }
 loadLS(); render(); applyLock(); if(isAgreed()){ const d=document.getElementById('intro'); if(d) d.open=false; }
+function aiLinkGo(){ if(!aiFromLink) return; const u=aiFromLink; aiFromLink=null; if(u.__err) toast(u.__err); else aiPreview(u); }
+function aiCheckLink(){ aiFromLink=aiFromHash()||aiFromLink; if(aiFromLink){ if(isAgreed()) aiLinkGo(); else { toast('Your AI update is waiting. Please read About this tool and agree to the terms first.'); showAgree(); } } }
+aiCheckLink(); window.addEventListener('hashchange',aiCheckLink);
 </script>
 </body>
 </html>
